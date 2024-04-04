@@ -2,6 +2,14 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    colors: {
+      'Pink1': '#FF99C8',
+      'Yellow1': '#FCF6BD',
+      'Green1' : '#D0F4DE',
+      'Blue1' : '#A9DEF9',
+      'Purple1' : '#E4C1F9'
+
+    },
     extend: {},
   },
   plugins: [],

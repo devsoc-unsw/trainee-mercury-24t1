@@ -7,8 +7,16 @@ export default {
       'Yellow1': '#FCF6BD',
       'Green1' : '#D0F4DE',
       'Blue1' : '#A9DEF9',
-      'Purple1' : '#E4C1F9'
-
+      'Purple1' : '#E4C1F9',
+      'Blue2': '#054A91',
+      'Blue3': '#3E7CB1',
+      'Blue4': '#81A4CD',
+      'Blue5': '#DBE4EE',
+      'Orange1': '#F17300',
+      'Pink2': '#FF73B3'
+    },
+    fontFamily: {
+      'Inter': ['"Inter"']
     },
     extend: {},
   },

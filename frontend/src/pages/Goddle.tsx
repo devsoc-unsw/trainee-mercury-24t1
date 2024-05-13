@@ -11,7 +11,7 @@ const titleStyle: CSSProperties = {
   fontSize: "1.5rem",
   textAlign: "center",
   boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
-  padding: "10px"
+  padding: "10px",
 };
 
 
@@ -39,7 +39,6 @@ const inputStyle: CSSProperties = {
 };
 
 const arrowStyle: CSSProperties = {
-//For somer reason can't change arrow collor :(
   border: "solid rgba(5, 74, 145, 1)",
   borderWidth: "0 3px 3px 0",
   padding: "5px",
@@ -55,11 +54,16 @@ export default function Goddle() {
   document.body.style.background = "rgba(169, 222, 249, 1)";
   return (
     <div style={{color: "rgba(5, 74, 145, 1)"}} > 
+      <div style={{padding:"10px 10px"}}>
+        <a href="/Home">Home </a>
+        <a style={{color: "rgba(228, 193, 249, 1)"}} href="/Goddle">Goddle </a>
+        <a href="/Algodle">Algodle </a>
+        <a href="/BrokenTelephone">BrokenTelephone </a>
+      </div>
       <p style = {titleStyle}>
       Guess Algorithm 
       </p>
-      <Game> 
-      </Game>
+      <Game> </Game>
     </div>
   )
 }

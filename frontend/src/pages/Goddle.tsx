@@ -1,4 +1,11 @@
-import React, { createElement, CSSProperties } from "react";
+import React, {CSSProperties } from "react";
+
+
+//To do:  
+// Priority 1:Handle anser with extra white space (we don't have the lib config to use .replaceALl either add libes20221 or do it in another way),  Handle Answer Already submmited 
+// Priority 2: Add Score ? Add score keeping ?, Clean up css,
+// blue rgba(169, 222, 249, 1)
+// dark blue (texts) rgba(5, 74, 145, 1)
 
 const titleStyle: CSSProperties = {
   width: "50%",
@@ -27,10 +34,8 @@ const formStyle: CSSProperties = {
   marginLeft: "auto",
   marginRight: "auto",
   marginTop: "10px",
-  justifyContent: "space-between"
+  justifyContent: "center"
 };
-
-
 
 const inputStyle: CSSProperties = {
   background: "rgba(228, 193, 249, 1)",
@@ -47,8 +52,7 @@ const arrowStyle: CSSProperties = {
   transform: "rotate(-45deg)",
 };
 
-// blue rgba(169, 222, 249, 1)
-// dark blue (texts) rgba(5, 74, 145, 1)
+
 export default function Goddle() {
   
   document.body.style.background = "rgba(169, 222, 249, 1)";
@@ -58,7 +62,7 @@ export default function Goddle() {
         <a href="/Home">Home </a>
         <a style={{color: "rgba(228, 193, 249, 1)"}} href="/Goddle">Goddle </a>
         <a href="/Algodle">Algodle </a>
-        <a href="/BrokenTelephone">BrokenTelephone </a>
+        <a href="/broken-telephone">BrokenTelephone </a>
       </div>
       <p style = {titleStyle}>
       Guess Algorithm 
@@ -70,7 +74,7 @@ export default function Goddle() {
 interface GameState {
   value: string;
   submittedAnswers: { answer: string; correctness: "correct" | "somewhat_correct" | "incorrect" }[][];
-
+  won: boolean;
 }
 
 class Game extends React.Component<{}, GameState> {
@@ -93,7 +97,8 @@ class Game extends React.Component<{}, GameState> {
 
     this.state = {
       value: '',
-      submittedAnswers: []
+      submittedAnswers: [],
+      won: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -102,11 +107,21 @@ class Game extends React.Component<{}, GameState> {
   handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({value: event.target.value});
   }
-//To do:  Handle Answer Already submmited ?
   handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     alert(this.target);
-
-    const { value } = this.state;
+    let { value, won } = this.state;
+    if (won) {
+      const number = getRandomNumber(0, this.targets.length);
+      this.target = this.targets[number];
+      this.setState(() => ({
+        submittedAnswers: [],
+        value: '',
+        won: false
+        
+      }));
+      event.preventDefault();
+      return;
+    }
     let answer = null;
     for (let i = 0; i < this.targets.length; i++) {
       
@@ -119,11 +134,11 @@ class Game extends React.Component<{}, GameState> {
       event.preventDefault();
       return;
     } else if (answer[0] === this.target[0]) {
+      won = true;
       alert("answer Found")
     }
 
 
-    let correctness: "correct" | "somewhat_correct" | "incorrect" = "incorrect";
     let submit:{ answer: string; correctness: "correct" | "somewhat_correct" | "incorrect" }[] = [];
 
     for (let i = 0; i < this.target.length; i++) {
@@ -136,26 +151,30 @@ class Game extends React.Component<{}, GameState> {
       } 
       submit.push(submitItem); 
     }
-
-
-    const message = `Answer: ${value}, Correctness: ${correctness}`;
     
     this.setState((prevState) => ({
       submittedAnswers: [...prevState.submittedAnswers, submit],
-      value: ''
+      value: '',
+      won: won
     }));
-    alert('An answr name was submitted: ' + this.state.value);
+    alert('An answr name was submitted: ' + this.state.value + won);
     event.preventDefault();
   }
 
   render() {
-    const { value, submittedAnswers } = this.state;
+    const {submittedAnswers } = this.state;
     return (
       <div >
         <div style={{ textAlign: 'center' , position: "relative"}}>
         <form onSubmit={this.handleSubmit} style = {formStyle}>
-            <input type="text" value={this.state.value} onChange={this.handleChange} placeholder="Type your algorithm here" style={inputStyle} />
+        {!this.state.won &&<input type="text" value={this.state.value} onChange={this.handleChange} placeholder="Type your algorithm here" style={inputStyle} />}
+        {!this.state.won ? (
             <button type="submit" style={arrowStyle}></button>
+          ) : (
+            //Using a submit button instead of reset button so User stays on the same goddle type (other types not implemented yet)
+            <button type="submit"style={{justifySelf:"center"}} >Restart</button>
+          )}
+            
         </form>
         </div>
         <div style={{ justifyContent: "space-evenly" , marginLeft:"100px", marginRight:"100px", marginTop:"15px"}}>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from "../assets/logo.png";
 import stockPhoto from "../assets/stockPhoto.png";
 
@@ -8,7 +9,8 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [retypePassword, setRetypePassword] = useState('');
-
+  const navigate = useNavigate();
+  
   const registerUser = () => {
     // Register goes here
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -22,7 +24,10 @@ export default function Register() {
       alert("Invalid Email");
     }
     else {
+      localStorage.setItem('user', JSON.stringify({ email, password }));
       console.log(email, password, retypePassword);
+      navigate('/login');
+
     }
   };
 

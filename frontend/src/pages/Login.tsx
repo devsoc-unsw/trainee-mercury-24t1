@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from "../assets/logo.png";
 import stockPhoto from "../assets/stockPhoto.png";
 
@@ -7,10 +8,25 @@ export default function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const loginUser = () => {
-    // Login goes here
-    console.log(email, password);
+    if (email === '' || password === '') {
+      alert("Incomplete Fields");
+    } else {
+      const user = localStorage.getItem('user');
+      if (user) {
+        const parsedUser = JSON.parse(user);
+        if (parsedUser.email === email && parsedUser.password === password) {
+          alert("Login successful!");
+          navigate('/goddle'); 
+        } else {
+          alert("Invalid email or password");
+        }
+      } else {
+        alert("No registered user found");
+      }
+    }
   };
 
   return (

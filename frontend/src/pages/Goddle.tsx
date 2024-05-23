@@ -1,4 +1,4 @@
-import React, {CSSProperties } from "react";
+import React, {CSSProperties, useState } from "react";
 
 
 //To do:  
@@ -67,108 +67,86 @@ export default function Goddle() {
       <p style = {titleStyle}>
       Guess Algorithm 
       </p>
-      <Game> </Game>
+      <h2>{Game()}</h2>
+
     </div>
   )
 }
-interface GameState {
-  value: string;
-  submittedAnswers: { answer: string; correctness: "correct" | "somewhat_correct" | "incorrect" }[][];
-  won: boolean;
-}
 
-class Game extends React.Component<{}, GameState> {
-  targets = [
+function Game () {
+  const targets = [
     ["Selection", "n^2",  "n^2",  "n^2", "1", "No","Selection"],
     ["Bubble", "n",  "n^2",  "n^2", "1", "Yes", "Exchanging"],
     ["Insertion", "n",  "n^2",  "n^2", "1", "Yes", "Insertion"],
-    ["Shell ", "nlogn",  "n^4/3",  "n^3/2", "1", "No", "Insertion"],
+    ["Shell", "nlogn",  "n^4/3",  "n^3/2", "1", "No", "Insertion"],
     ["Merge", "nlogn",  "nlogn",  "nlogn", "n", "Yes", "Merging"],
     ["Quick", "nlogn",  "nlogn",  "n^2", "logn", "No", "Partitioning"],
     ["Radix", "n",  "n* k/d",  "n* k/d", "n + 2^d", "Yes", "Non-comparison"]];
-  target = ["", "",  "",  "", "", "",""];
-  kind = "sort"
+  const kind = "sort"
+  const number = getRandomNumber(0, targets.length);
+  const [target, setTarget] = useState(targets[number]);
+  const [value, setValue] = useState("");
+  const [submittedAnswers, setSubmitedAnswers] = useState<{ answer: string; correctness: "correct" | "somewhat_correct" | "incorrect" }[][]>([]);
+  const [won, setWon] = useState<Boolean>(false);
 
-  constructor(props: {}) {
-    super(props);
-    const number = getRandomNumber(0, this.targets.length);
-    this.target = this.targets[number];
-    
-
-    this.state = {
-      value: '',
-      submittedAnswers: [],
-      won: false
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>)=> {
+    setValue(event.target.value);
   }
-
-  handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({value: event.target.value});
-  }
-  handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    alert(this.target);
-    let { value, won } = this.state;
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    alert(target);
     if (won) {
-      const number = getRandomNumber(0, this.targets.length);
-      this.target = this.targets[number];
-      this.setState(() => ({
-        submittedAnswers: [],
-        value: '',
-        won: false
-        
-      }));
+      const number = getRandomNumber(0, targets.length);
+      setTarget(targets[number]);
+      setSubmitedAnswers([]);
+      setValue('');
+      setWon(false);
       event.preventDefault();
       return;
     }
     let answer = null;
-    for (let i = 0; i < this.targets.length; i++) {
+    for (let i = 0; i < targets.length; i++) {
       
-      if (value.toLocaleLowerCase() == this.targets[i][0].toLocaleLowerCase()){
-        answer = this.targets[i];
+      if (value.toLocaleLowerCase() == targets[i][0].toLocaleLowerCase()){
+        answer = targets[i];
       };
     }
     if (answer == null) {
       alert('answer invalid');
       event.preventDefault();
       return;
-    } else if (answer[0] === this.target[0]) {
-      won = true;
+    } else if (answer[0] === target[0]) {
+      setWon(true);
       alert("answer Found")
     }
 
 
     let submit:{ answer: string; correctness: "correct" | "somewhat_correct" | "incorrect" }[] = [];
 
-    for (let i = 0; i < this.target.length; i++) {
+    for (let i = 0; i < target.length; i++) {
       let submitItem:{ answer: string; correctness: "correct" | "somewhat_correct" | "incorrect" } = { answer: '', correctness: 'incorrect' };
       submitItem.answer = answer[i];
-      if (answer[i] === this.target[i]){
+      if (answer[i] === target[i]){
         submitItem.correctness = "correct";
-      } else if (this.target[i].includes(answer[i])) {
+      } else if (target[i].includes(answer[i])) {
         submitItem.correctness = "somewhat_correct";
       } 
       submit.push(submitItem); 
     }
-    
-    this.setState((prevState) => ({
-      submittedAnswers: [...prevState.submittedAnswers, submit],
-      value: '',
-      won: won
-    }));
-    alert('An answr name was submitted: ' + this.state.value + won);
+
+    setSubmitedAnswers(answers => [...answers,submit]);
+    setValue('');
+
+    alert('An answer was submitted: ' + value + won);
     event.preventDefault();
   }
 
-  render() {
-    const {submittedAnswers } = this.state;
-    return (
+  return (
+
       <div >
         <div style={{ textAlign: 'center' , position: "relative"}}>
-        <form onSubmit={this.handleSubmit} style = {formStyle}>
-        {!this.state.won &&<input type="text" value={this.state.value} onChange={this.handleChange} placeholder="Type your algorithm here" style={inputStyle} />}
-        {!this.state.won ? (
+        <form onSubmit={handleSubmit} style = {formStyle}>
+        {!won &&<input type="text" value={value} onChange={handleChange} placeholder="Type your algorithm here" style={inputStyle} />}
+        {!won ? (
             <button type="submit" style={arrowStyle}></button>
           ) : (
             //Using a submit button instead of reset button so User stays on the same goddle type (other types not implemented yet)
@@ -212,8 +190,8 @@ class Game extends React.Component<{}, GameState> {
       </div>
       
 
-    );
-  }
+    
+  );
 }
 
 function getColorForCorrectness(correctness: "correct" | "somewhat_correct" | "incorrect"): string {

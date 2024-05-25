@@ -54,14 +54,14 @@ export default function Goddle() {
   document.body.style.background = "rgba(169, 222, 249, 1)";
   return (
     <div style={{ color: "rgba(5, 74, 145, 1)" }}>
-      <div style={{ padding: "10px 10px" }}>
+      {/* <div style={{ padding: "10px 10px" }}>
         <a href="/Home">Home </a>
         <a style={{ color: "rgba(228, 193, 249, 1)" }} href="/Goddle">
           Goddle{" "}
         </a>
         <a href="/Algodle">Algodle </a>
         <a href="/broken-telephone">BrokenTelephone </a>
-      </div>
+      </div> */}
       <p style={titleStyle}>Guess Algorithm</p>
       <h2>{Game()}</h2>
     </div>

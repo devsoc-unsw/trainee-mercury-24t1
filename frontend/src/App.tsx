@@ -9,6 +9,7 @@ import Algodle from "./pages/Algodle";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import { useState } from "react";
+import { AnimatePresence } from "framer-motion";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -17,7 +18,7 @@ function App() {
     <div className="flex flex-col h-screen">
       <Navbar toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
       <div>
-        {isSidebarOpen && <Sidebar />}
+        <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home />} />

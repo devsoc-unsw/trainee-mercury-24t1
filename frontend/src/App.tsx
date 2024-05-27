@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
+import Connections from "./pages/Connections";
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -27,6 +28,7 @@ function App() {
             <Route path="/goddle" element={<Goddle />} />
             <Route path="/broken-telephone" element={<BrokenTelephone />} />
             <Route path="/algodle" element={<Algodle />} />
+            <Route path="/connections" element={<Connections />} />
           </Routes>
         </BrowserRouter>
       </div>

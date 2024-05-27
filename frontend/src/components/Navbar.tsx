@@ -6,7 +6,7 @@ type NavbarProps = {
 
 export default function Navbar({ toggleSidebar }: NavbarProps) {
   return (
-    <div className="w-full bg-black text-white py-5 items-center justify-center px-3 grid grid-cols-5 row-span-1 h-[12vh] border-white border-b">
+    <div className="w-full bg-black text-white py-5 items-center justify-center px-3 grid grid-cols-5 row-span-1 h-21 border-white border-b">
       <button onClick={toggleSidebar}>
         <Bars3Icon className="stroke-white fill-white w-7 h-7" />
       </button>

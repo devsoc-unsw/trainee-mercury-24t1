@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3000:3000"
+  
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    
+  db:
+    build: 
+      context: ./db
+    environment:
+      - POSTGRES_PASSWORD=algodle

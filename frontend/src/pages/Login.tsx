@@ -19,7 +19,7 @@ export default function Login() {
         const parsedUser = JSON.parse(user);
         if (parsedUser.email === email && parsedUser.password === password) {
           alert("Login successful!");
-          navigate('/goddle'); 
+          navigate('/home'); 
         } else {
           alert("Invalid email or password");
         }

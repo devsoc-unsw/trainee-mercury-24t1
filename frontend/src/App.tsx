@@ -22,9 +22,10 @@ function App() {
         <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/goddle" element={<Goddle />} />
             <Route path="/broken-telephone" element={<BrokenTelephone />} />
             <Route path="/algodle" element={<Algodle />} />

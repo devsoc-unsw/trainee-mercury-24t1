@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 export default function Sidebar() {
-  const games = ["Algodle", "Connections", "Game 3"];
+  const games = ["Algodle", "Connections", "Broken Tele"];
 
   return (
     <motion.div

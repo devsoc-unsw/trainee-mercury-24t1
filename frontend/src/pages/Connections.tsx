@@ -1,36 +1,95 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function Connections() {
-    const categories = [
+type Category = {
+    category: string;
+    words: string[];
+};
+
+type ColorState = {
+    [key: string]: string;
+};
+
+// shuffle the arry
+const shuffleArray = (array: string[]): string[] => {
+    const shuffledArray = [...array];
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    return shuffledArray;
+};
+
+const Connections: React.FC = () => {
+    const categories: Category[] = [
         { category: 'Category 1', words: ['SIGMA', 'MEW', 'GYM', 'GYATT'] },
-        { category: 'Category 2', words: ['LOL1', 'word6', 'word7', 'word8'] },
-        { category: 'Category 3', words: ['word9', 'word10', 'word11', 'word12'] },
-        { category: 'Category 4', words: ['word13', 'word14', 'word15', 'word16'] }
+        { category: 'Category 2', words: ['COMPUTER', 'HEADPHONES', 'PHONE', 'EARPHONES'] },
+        { category: 'Category 3', words: ['JAMES', 'JOHN', 'JAKE', 'JEFF'] },
+        { category: 'Category 4', words: ['RICE', 'PASTA', 'POOP', 'POTATO'] }
     ];
 
-    const [selectedWords, setSelectedWords] = useState([]);
-    const [colors, setColors] = useState({});
+    const allWords = categories.flatMap(category => category.words);
 
-    const handleClick = (word, category) => {
+    const initialColors: ColorState = allWords.reduce((acc, word) => {
+        acc[word] = 'bg-gray-200';
+        return acc;
+    }, {} as ColorState);
 
+    // hooks
+    const [colors, setColors] = useState<ColorState>(initialColors);
+    const [shuffledWords, setShuffledWords] = useState<string[]>([]);
+    const [selectedWords, setSelectedWords] = useState<{ word: string, category: string }[]>([]);
+
+    useEffect(() => {
+        setShuffledWords(shuffleArray(allWords));
+    }, []); 
+
+    const handleClick = (word: string, category: string) => {
+      
+        if (selectedWords.some(selected => selected.word === word)) return;
+
+        const newSelectedWords = [...selectedWords, { word, category }];
+        setSelectedWords(newSelectedWords);
+
+        if (newSelectedWords.length === 4) {
+            const allSameCategory = newSelectedWords.every(item => item.category === newSelectedWords[0].category);
+            const newColors = { ...colors };
+
+            newSelectedWords.forEach(({ word }) => {
+                newColors[word] = allSameCategory ? 'bg-green-500' : 'bg-red-500';
+            });
+
+            setColors(newColors);
+            setSelectedWords([]); 
+        } else {
+            setColors(prevColors => ({
+                ...prevColors,
+                [word]: 'bg-gray-500'
+            }));
+        }
     };
+
+    const allGreen = Object.values(colors).every(color => color === 'bg-green-500');
 
     return (
         <div className="grid grid-cols-1 justify-items-center">
             <h1 className="pt-10 text-black mt-2 mb-5">Connections</h1>
             <div className="grid grid-cols-4 gap-4 justify-items-center h-[500px] w-[800px]">
-                {categories.map((category, catIndex) => (
-                    category.words.map((word, wordIndex) => (
-                        <div
-                            key={`${catIndex}-${wordIndex}`}
-                            className={`${colors[word] || 'bg-gray-200'} h-full w-full mt-5 mb-5 text-center flex items-center justify-center rounded-md cursor-pointer`}
-                            onClick={() => handleClick(word, category.category)}
-                        >
-                            {word}
-                        </div>
-                    ))
+                {shuffledWords.map((word) => (
+                    <div
+                        key={word}
+                        className={`${colors[word]} h-full w-full mt-5 mb-5 text-center flex items-center justify-center rounded-md cursor-pointer`}
+                        onClick={() => {
+                            const category = categories.find(category => category.words.includes(word))?.category || '';
+                            handleClick(word, category);
+                        }}
+                    >
+                        {word}
+                    </div>
                 ))}
             </div>
+            {allGreen && <p className='mt-10'>Congratulations! You completed it!</p>}
         </div>
     );
-}
+};
+
+export default Connections;

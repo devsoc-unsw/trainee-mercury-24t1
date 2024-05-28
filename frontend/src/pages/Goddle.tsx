@@ -1,4 +1,5 @@
 import React, { CSSProperties, useState } from "react";
+import stats from "../assets/stats.png";
 
 //To do:
 // Priority 1:Handle anser with extra white space (we don't have the lib config to use .replaceALl either add libes20221 or do it in another way),  Handle Answer Already submmited
@@ -18,6 +19,40 @@ const titleStyle: CSSProperties = {
   textAlign: "center",
   boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
   padding: "10px",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+};
+
+
+
+const overlayContainerStyle: CSSProperties = {
+  position: "fixed",
+  top:" 0",
+  left:" 0",
+  width: "100%",
+  height: "100%",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "rgba(0, 0, 0, 0.5)", 
+  zIndex: "1",
+
+};
+
+const overlayStyle: CSSProperties = {
+  width: "50%",
+  background: "rgba(228, 193, 249, 1)",
+  marginLeft: "auto",
+  marginRight: "auto",
+  marginTop: "10px",
+  borderRadius: "4px",
+  fontFamily: "sans-serif",
+  fontSize: "1.5rem",
+  textAlign: "center",
+  boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
+  padding: "10px",
+  alignItems: "center",
 };
 
 const formStyle: CSSProperties = {
@@ -50,7 +85,13 @@ const arrowStyle: CSSProperties = {
   transform: "rotate(-45deg)",
 };
 
+const buttonHoverStyle: CSSProperties = {
+  backgroundColor: "rgba(5, 74, 145, 1)", // New background color on hover
+  color: "rgba(255, 255, 255, 1)", // New text color on hover
+};
+
 export default function Goddle() {
+  
   document.body.style.background = "rgba(169, 222, 249, 1)";
   return (
     <div style={{ color: "rgba(5, 74, 145, 1)" }}>
@@ -62,8 +103,17 @@ export default function Goddle() {
         <a href="/Algodle">Algodle </a>
         <a href="/broken-telephone">BrokenTelephone </a>
       </div> */}
-      <p style={titleStyle}>Guess Algorithm</p>
+      <div style={titleStyle}> 
+      <div style={{justifySelf:"left"}}>
+      {Score()} 
+
+      </div>
+      <p >Guess Algorithm</p>
+      <div>
+      </div>
+      </div>
       <h2>{Game()}</h2>
+
     </div>
   );
 }
@@ -88,18 +138,27 @@ function Game() {
     }[][]
   >([]);
   const [won, setWon] = useState<boolean>(false);
+  const [numberOfAttempts, setnumberOfAttempts] = useState<number>(0);
+  const [startingTime, setStartingTime] = useState<number>(0);
+
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    alert(target);
+    // !! Rarely chooses and invalid targed somehow :( need to fix)
+   // alert(target);
+    // I make a local variable because SetState takes a bit to update the variable, when adding score it hasnt updated yet and pass the outdated value same for time
+    let numAttempts = numberOfAttempts;
+    let start = startingTime;
     if (won) {
       const number = getRandomNumber(0, targets.length);
       setTarget(targets[number]);
       setSubmitedAnswers([]);
       setValue("");
       setWon(false);
+      setnumberOfAttempts(0);
+      setStartingTime(new Date().getTime());
       event.preventDefault();
       return;
     }
@@ -110,12 +169,24 @@ function Game() {
       }
     }
     if (answer == null) {
-      alert("answer invalid");
+      alert("Invalid Answer");
       event.preventDefault();
       return;
-    } else if (answer[0] === target[0]) {
+    } else {
+      numAttempts += 1;
+    }
+    //Starting time of first guess
+    if (numAttempts == 1) {
+      start = new Date().getTime()
+      setStartingTime(start);
+    }
+    if (answer[0] === target[0]) {
       setWon(true);
-      alert("answer Found");
+      alert("Congrats you found the answer!");
+      const d = new Date();
+      d.setTime(d.getTime() + (7*24*60*60*1000));
+      let expires = "expires="+ d.toUTCString();
+      AddtoScore((new Date().getTime() - start), numAttempts);
     }
 
     const submit: {
@@ -139,8 +210,9 @@ function Game() {
 
     setSubmitedAnswers((answers) => [...answers, submit]);
     setValue("");
+    setnumberOfAttempts(numAttempts);
 
-    alert("An answer was submitted: " + value + won);
+
     event.preventDefault();
   };
 
@@ -158,10 +230,10 @@ function Game() {
             />
           )}
           {!won ? (
-            <button type="submit" style={arrowStyle}></button>
+            <button type="submit" style={arrowStyle} className="click" ></button>
           ) : (
             //Using a submit button instead of reset button so User stays on the same goddle type (other types not implemented yet)
-            <button type="submit" style={{ justifySelf: "center" }}>
+            <button type="submit" style={{ justifySelf: "center" }} className="click">
               Restart
             </button>
           )}
@@ -240,4 +312,163 @@ function getRandomNumber(n: number, m: number) {
 
   // Return the generated random number
   return randomNumber;
+}
+
+function Score() {
+  let topAttempt = "0"
+  let topTime = "0"
+  let gamesPlayed = "0"
+
+  let topAttemptAdress = "topAttempt" + "=";
+  let topTimeAdress = "topTimeAdresst" + "=";
+  let gamesPlayedAdress = "gamesPlayed" + "=";
+
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  const [visible, setVisibility] = useState(false);
+
+
+  //This does work but it slow Need to figure out why We could just delete all cookies which would be faster but if we expand for new games it could get messy
+  const clearStats = () => {
+    const d = new Date();
+    d.setTime(d.getTime() + (7*24*60*60*1000));
+    let expires = "expires="+ d.toUTCString();
+    document.cookie = topAttemptAdress + 0 + ";" + expires + ";path=/";
+    document.cookie = topTimeAdress + 0 + ";" + expires + ";path=/";
+    document.cookie = gamesPlayedAdress + 0 + ";" + expires + ";path=/";
+  }
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(topAttemptAdress) == 0) {
+      topAttempt = c.substring(topAttemptAdress.length, c.length);
+    } 
+
+    if (c.indexOf(topTimeAdress) == 0) {
+      topTime = c.substring(topTimeAdress.length, c.length);
+    }
+
+    if (c.indexOf(gamesPlayedAdress) == 0) {
+      gamesPlayed = c.substring(gamesPlayedAdress.length, c.length);
+    }
+  }
+
+  const toggleScore = (event: { preventDefault: () => void; }) => {
+    if (visible == false) {
+      setVisibility(true);
+    } else {
+      setVisibility(false);
+    }
+    event.preventDefault(); // Prevent the default form submission behavior
+
+   
+  }
+
+  return (
+    <>
+      <div style={{ overflow: "hidden" }}>
+        <button onClick={toggleScore} className="click">
+          <img
+            style={{
+              background: "transparent",
+              width: "20px",
+              height: "20px",
+              filter: "drop-shadow(0px 100px 0 rgba(5, 74, 145, 1))",
+              transform: "translateY(-100px)",
+            }}
+            src={stats}
+            alt="Statistics"
+          />
+        </button>
+      </div>
+      <div
+        aria-expanded={visible}
+        style={{
+          ...overlayContainerStyle,
+          visibility: visible ? "visible" : "hidden",
+        }}
+      >
+        <div style={overlayStyle}>
+          <button onClick={toggleScore} style={{ float: "right" }} className="click">Close</button>
+          <button style={{ float: "left"}} onClick={clearStats} className="click">Clear</button>
+          <h1 style={{ marginBottom: "5px", marginTop: "5px", fontSize: "35px", borderBottom: "2px Solid " }}>Your Statistics</h1>
+          <div style={{ justifyContent: "space-around" , display:"flex", marginTop:"15px"}}>
+            <div style={{ justifyContent: "center" }}>
+                <div>
+                Top Attempt
+                </div>
+                <div>
+                {topAttempt}
+                </div>
+              </div>
+              <div style={{ justifyContent: "center" }}>
+                <div>
+                Top Time
+                </div>
+                <div>
+                {topTime}
+                </div>
+              </div>
+              <div style={{ justifyContent: "center" }}>
+                <div>
+                Games Played
+                </div>
+                <div>
+                {gamesPlayed}
+                </div>
+              </div>
+          </div>
+
+
+
+        </div>
+      </div>
+    </>
+  );
+}
+
+function AddtoScore (time: number,NumberOfAttempts: number) {
+
+  const d = new Date();
+  d.setTime(d.getTime() + (7*24*60*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  let topAttemptAdress = "topAttempt" + "=";
+  let topTimeAdress = "topTimeAdresst" + "=";
+  let gamesPlayedAdress = "gamesPlayed" + "=";
+
+  let previousGameExist = false;
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(topAttemptAdress) == 0) {
+      previousGameExist = true;
+      if (Number(c.substring(topAttemptAdress.length, c.length)) > NumberOfAttempts || Number(c.substring(topAttemptAdress.length, c.length)) == 0) {
+        document.cookie = topAttemptAdress + NumberOfAttempts + ";" + expires + ";path=/";
+      }
+    }
+
+    if (c.indexOf(topTimeAdress) == 0) {
+      if (Number(c.substring(topTimeAdress.length, c.length)) > time || Number(c.substring(topTimeAdress.length, c.length)) == 0) {
+        document.cookie = topTimeAdress + time + ";" + expires + ";path=/";
+      }
+    }
+
+    if (c.indexOf(gamesPlayedAdress) == 0) {
+      previousGameExist = true;
+      document.cookie = gamesPlayedAdress + (Number(c.substring(gamesPlayedAdress.length, c.length)) + 1) + ";" + expires + ";path=/";
+    }
+    
+
+  }
+  if (!previousGameExist) {
+    document.cookie = topAttemptAdress + NumberOfAttempts + ";" + expires + ";path=/";
+    document.cookie = topTimeAdress + time + ";" + expires + ";path=/";
+    document.cookie = gamesPlayedAdress + 1 + ";" + expires + ";path=/";
+  }
 }

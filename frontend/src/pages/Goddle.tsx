@@ -1,5 +1,6 @@
 import React, { CSSProperties, useState } from "react";
 import stats from "../assets/stats.png";
+import info from "../assets/info.png";
 
 //To do:
 // Priority 1:Handle anser with extra white space (we don't have the lib config to use .replaceALl either add libes20221 or do it in another way),  Handle Answer Already submmited
@@ -23,7 +24,15 @@ const titleStyle: CSSProperties = {
   justifyContent: "space-between",
   alignItems: "center",
 };
-
+const targets = [
+  ["Selection", "n^2", "n^2", "n^2", "1", "No", "Selection"],
+  ["Bubble", "n", "n^2", "n^2", "1", "Yes", "Exchanging"],
+  ["Insertion", "n", "n^2", "n^2", "1", "Yes", "Insertion"],
+  ["Shell", "nlogn", "n^4/3", "n^3/2", "1", "No", "Insertion"],
+  ["Merge", "nlogn", "nlogn", "nlogn", "n", "Yes", "Merging"],
+  ["Quick", "nlogn", "nlogn", "n^2", "logn", "No", "Partitioning"],
+  ["Radix", "n", "n* k/d", "n* k/d", "n + 2^d", "Yes", "Non-comparison"],
+];
 
 
 const overlayContainerStyle: CSSProperties = {
@@ -49,10 +58,10 @@ const overlayStyle: CSSProperties = {
   borderRadius: "4px",
   fontFamily: "sans-serif",
   fontSize: "1.5rem",
-  textAlign: "center",
   boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
   padding: "10px",
-  alignItems: "center",
+  display: "flex",
+  flexDirection: "column",
 };
 
 const formStyle: CSSProperties = {
@@ -85,10 +94,6 @@ const arrowStyle: CSSProperties = {
   transform: "rotate(-45deg)",
 };
 
-const buttonHoverStyle: CSSProperties = {
-  backgroundColor: "rgba(5, 74, 145, 1)", // New background color on hover
-  color: "rgba(255, 255, 255, 1)", // New text color on hover
-};
 
 export default function Goddle() {
   
@@ -108,9 +113,12 @@ export default function Goddle() {
       {Score()} 
 
       </div>
-      <p >Guess Algorithm</p>
+      <p >Guess The Sorting Algorithm</p>
       <div>
+      {Information()} 
+
       </div>
+      
       </div>
       <h2>{Game()}</h2>
 
@@ -119,15 +127,7 @@ export default function Goddle() {
 }
 
 function Game() {
-  const targets = [
-    ["Selection", "n^2", "n^2", "n^2", "1", "No", "Selection"],
-    ["Bubble", "n", "n^2", "n^2", "1", "Yes", "Exchanging"],
-    ["Insertion", "n", "n^2", "n^2", "1", "Yes", "Insertion"],
-    ["Shell", "nlogn", "n^4/3", "n^3/2", "1", "No", "Insertion"],
-    ["Merge", "nlogn", "nlogn", "nlogn", "n", "Yes", "Merging"],
-    ["Quick", "nlogn", "nlogn", "n^2", "logn", "No", "Partitioning"],
-    ["Radix", "n", "n* k/d", "n* k/d", "n + 2^d", "Yes", "Non-comparison"],
-  ];
+  
   const number = getRandomNumber(0, targets.length);
   const [target, setTarget] = useState(targets[number]);
   const [value, setValue] = useState("");
@@ -183,9 +183,6 @@ function Game() {
     if (answer[0] === target[0]) {
       setWon(true);
       alert("Congrats you found the answer!");
-      const d = new Date();
-      d.setTime(d.getTime() + (7*24*60*60*1000));
-      let expires = "expires="+ d.toUTCString();
       AddtoScore((new Date().getTime() - start), numAttempts);
     }
 
@@ -325,7 +322,7 @@ function Score() {
 
   let decodedCookie = decodeURIComponent(document.cookie);
   let ca = decodedCookie.split(';');
-  const [visible, setVisibility] = useState(false);
+  const [scoreVisible, setVisibility] = useState(false);
 
 
   //This does work but it slow Need to figure out why We could just delete all cookies which would be faster but if we expand for new games it could get messy
@@ -356,7 +353,7 @@ function Score() {
   }
 
   const toggleScore = (event: { preventDefault: () => void; }) => {
-    if (visible == false) {
+    if (scoreVisible == false) {
       setVisibility(true);
     } else {
       setVisibility(false);
@@ -384,16 +381,21 @@ function Score() {
         </button>
       </div>
       <div
-        aria-expanded={visible}
+        aria-expanded={scoreVisible}
         style={{
           ...overlayContainerStyle,
-          visibility: visible ? "visible" : "hidden",
+          visibility: scoreVisible ? "visible" : "hidden",
         }}
       >
+
         <div style={overlayStyle}>
-          <button onClick={toggleScore} style={{ float: "right" }} className="click">Close</button>
+          <div style={{ float: "right", justifyContent: "space-between" }}>
+          <button onClick={toggleScore} style={{ float: "right", justifySelf: "left" }} className="click">Close</button>
           <button style={{ float: "left"}} onClick={clearStats} className="click">Clear</button>
+
           <h1 style={{ marginBottom: "5px", marginTop: "5px", fontSize: "35px", borderBottom: "2px Solid " }}>Your Statistics</h1>
+          </div>
+  
           <div style={{ justifyContent: "space-around" , display:"flex", marginTop:"15px"}}>
             <div style={{ justifyContent: "center" }}>
                 <div>
@@ -471,4 +473,64 @@ function AddtoScore (time: number,NumberOfAttempts: number) {
     document.cookie = topTimeAdress + time + ";" + expires + ";path=/";
     document.cookie = gamesPlayedAdress + 1 + ";" + expires + ";path=/";
   }
+}
+
+function Information() {
+  const [informationVisible, setVisibility] = useState(false);
+  const firstElements = targets.map(subArray => subArray[0]);
+  const toggleScore = (event: { preventDefault: () => void; }) => {
+    if (informationVisible == false) {
+      setVisibility(true);
+    } else {
+      setVisibility(false);
+    }
+    event.preventDefault(); // Prevent the default form submission behavior
+
+   
+  }
+
+  return (
+    <>
+      <div style={{ overflow: "hidden" }}>
+        <button onClick={toggleScore} className="click">
+          <img
+            style={{
+              background: "transparent",
+              width: "20px",
+              height: "20px",
+              filter: "drop-shadow(0px 100px 0 rgba(5, 74, 145, 1))",
+              transform: "translateY(-100px)",
+            }}
+            src={info}
+            alt="Info"
+          />
+        </button>
+      </div>
+      <div
+        aria-expanded={informationVisible}
+        style={{
+          ...overlayContainerStyle,
+          visibility: informationVisible ? "visible" : "hidden",
+        }}
+      >
+        <div style={overlayStyle}>
+          <div>
+          <button onClick={toggleScore} style={{ float: "right" }} className="click">Close</button>
+
+          </div>
+          <h1 style={{ marginBottom: "5px", fontSize: "35px", borderBottom: "2px Solid " }}>How to play:</h1>
+          <h2> Take a guess from the following list, correct characteristics will show up green and incorrect ones red. 
+            Use your knowledge to find the right answer !</h2>
+          <ul style={{textAlign: "left", listStyleType: "disc", marginLeft: "15px"}} className="a">
+            {firstElements.map((element, index) => (
+              <li  key={index}>{element}</li>
+            ))}
+          </ul>
+          
+
+
+        </div>
+      </div>
+    </>
+  );
 }

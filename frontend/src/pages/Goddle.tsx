@@ -6,24 +6,9 @@ import info from "../assets/info.png";
 // Priority 1:Handle anser with extra white space (we don't have the lib config to use .replaceALl either add libes20221 or do it in another way),  Handle Answer Already submmited
 // Priority 2: Add Score ? Add score keeping ?, Clean up css,
 // blue rgba(169, 222, 249, 1)
-// dark blue (texts) rgba(5, 74, 145, 1)
+// dark blue (texts) rgba(5, 74, 145, 1) or Blue2
+// pale Purple1
 
-const titleStyle: CSSProperties = {
-  width: "50%",
-  background: "rgba(228, 193, 249, 1)",
-  marginLeft: "auto",
-  marginRight: "auto",
-  marginTop: "10px",
-  borderRadius: "4px",
-  fontFamily: "sans-serif",
-  fontSize: "1.5rem",
-  textAlign: "center",
-  boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
-  padding: "10px",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-};
 const targets = [
   ["Selection", "n^2", "n^2", "n^2", "1", "No", "Selection"],
   ["Bubble", "n", "n^2", "n^2", "1", "Yes", "Exchanging"],
@@ -34,57 +19,11 @@ const targets = [
   ["Radix", "n", "n* k/d", "n* k/d", "n + 2^d", "Yes", "Non-comparison"],
 ];
 
-
-const overlayContainerStyle: CSSProperties = {
-  position: "fixed",
-  top:" 0",
-  left:" 0",
-  width: "100%",
-  height: "100%",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  backgroundColor: "rgba(0, 0, 0, 0.5)", 
-  zIndex: "1",
-
-};
-
-const overlayStyle: CSSProperties = {
-  width: "50%",
-  background: "rgba(228, 193, 249, 1)",
-  marginLeft: "auto",
-  marginRight: "auto",
-  marginTop: "10px",
-  borderRadius: "4px",
-  fontFamily: "sans-serif",
-  fontSize: "1.5rem",
-  boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
-  padding: "10px",
-  display: "flex",
-  flexDirection: "column",
-};
-
-const formStyle: CSSProperties = {
-  width: "35%",
-  background: "rgba(228, 193, 249, 1)",
-  borderRadius: "4px",
-  fontFamily: "sans-serif",
-  fontSize: "1.5rem",
-  textAlign: "center",
-  display: "flex",
-  alignItems: "center",
-  marginLeft: "auto",
-  marginRight: "auto",
-  marginTop: "10px",
-  justifyContent: "center",
-};
-
-const inputStyle: CSSProperties = {
-  background: "rgba(228, 193, 249, 1)",
-  padding: "1px",
-  width: "100%",
-};
-
+const titleStyle = "w-1/2 bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg text-center shadow-md py-4 flex justify-between items-center";
+const overlayContainerStyle = "fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-10";
+const overlayStyle = "w-1/2 bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg shadow-md py-4 flex flex-col";
+const formStyle = "w-1/3 bg-Purple1 rounded-md font-sans text-lg text-center flex items-center mx-auto mt-10 justify-center";
+const inputStyle = "bg-Purple1 p-1 w-full placeholder-Blue2 placeholder-opacity-60";
 const arrowStyle: CSSProperties = {
   border: "solid rgba(5, 74, 145, 1)",
   borderWidth: "0 3px 3px 0",
@@ -97,9 +36,9 @@ const arrowStyle: CSSProperties = {
 
 export default function Goddle() {
   
-  document.body.style.background = "rgba(169, 222, 249, 1)";
+  document.body.className = "bg-Blue1"
   return (
-    <div style={{ color: "rgba(5, 74, 145, 1)" }}>
+    <div className="text-Blue2">
       {/* <div style={{ padding: "10px 10px" }}>
         <a href="/Home">Home </a>
         <a style={{ color: "rgba(228, 193, 249, 1)" }} href="/Goddle">
@@ -108,17 +47,15 @@ export default function Goddle() {
         <a href="/Algodle">Algodle </a>
         <a href="/broken-telephone">BrokenTelephone </a>
       </div> */}
-      <div style={titleStyle}> 
-      <div style={{justifySelf:"left"}}>
-      {Score()} 
+      <div className={titleStyle}> 
+        <div >
+        {Score()} 
 
-      </div>
-      <p >Guess The Sorting Algorithm</p>
-      <div>
-      {Information()} 
-
-      </div>
-      
+        </div>
+        <p className="text-2xl">Guess The Sorting Algorithm</p>
+        <div>
+        {Information()} 
+        </div>
       </div>
       <h2>{Game()}</h2>
 
@@ -215,36 +152,31 @@ function Game() {
 
   return (
     <div>
-      <div style={{ textAlign: "center", position: "relative" }}>
-        <form onSubmit={handleSubmit} style={formStyle}>
+      <div className = "relative text-center">
+        <form onSubmit={handleSubmit} className={formStyle}>
           {!won && (
             <input
               type="text"
               value={value}
               onChange={handleChange}
               placeholder="Type your algorithm here"
-              style={inputStyle}
+              className={inputStyle}
             />
           )}
           {!won ? (
-            <button type="submit" style={arrowStyle} className="click" ></button>
+            <button type="submit" style={arrowStyle} className="click"></button>
           ) : (
             //Using a submit button instead of reset button so User stays on the same goddle type (other types not implemented yet)
-            <button type="submit" style={{ justifySelf: "center" }} className="click">
+            <button type="submit" className="hover:opacity-40 justify-center p-1">
               Restart
             </button>
           )}
         </form>
       </div>
       <div
-        style={{
-          justifyContent: "space-evenly",
-          marginLeft: "100px",
-          marginRight: "100px",
-          marginTop: "15px",
-        }}
+      className="justify-evenly ml-100 mr-100 mt-15"
       >
-        <table style={{ width: "100%", rowGap: "100px" }}>
+        <table className="w-full gap-y-100 mt-10">
           <thead>
             <tr>
               <th>Name</th>
@@ -365,15 +297,16 @@ function Score() {
 
   return (
     <>
-      <div style={{ overflow: "hidden" }}>
-        <button onClick={toggleScore} className="click">
+      <div className= "overflow-hidden">
+        <button onClick={toggleScore} className="hover:opacity-40">
           <img
             style={{
               background: "transparent",
-              width: "20px",
-              height: "20px",
+              width: "30px",
+              height: "30px",
               filter: "drop-shadow(0px 100px 0 rgba(5, 74, 145, 1))",
               transform: "translateY(-100px)",
+              marginLeft: "10px"
             }}
             src={stats}
             alt="Statistics"
@@ -382,22 +315,19 @@ function Score() {
       </div>
       <div
         aria-expanded={scoreVisible}
-        style={{
-          ...overlayContainerStyle,
-          visibility: scoreVisible ? "visible" : "hidden",
-        }}
+        className={` ${scoreVisible ? 'visible' : 'hidden'} ${overlayContainerStyle}`}
       >
 
-        <div style={overlayStyle}>
-          <div style={{ float: "right", justifyContent: "space-between" }}>
-          <button onClick={toggleScore} style={{ float: "right", justifySelf: "left" }} className="click">Close</button>
-          <button style={{ float: "left"}} onClick={clearStats} className="click">Clear</button>
+        <div className={overlayStyle}>
+          <div className="justify-between float-right">
+          <button onClick={toggleScore} className="hover:opacity-40 float-right mr-5">Close</button>
+          <button className="hover:opacity-40 float-left ml-5" onClick={clearStats}>Clear</button>
 
-          <h1 style={{ marginBottom: "5px", marginTop: "5px", fontSize: "35px", borderBottom: "2px Solid " }}>Your Statistics</h1>
+          <h1 className="ml-10 mr-10 mb-10 text-4xl border-b-2 border-solid border-Blue2">Your Statistics</h1>
           </div>
   
-          <div style={{ justifyContent: "space-around" , display:"flex", marginTop:"15px"}}>
-            <div style={{ justifyContent: "center" }}>
+          <div className="justify-around flex mt-15">
+            <div className="justfiy-center">
                 <div>
                 Top Attempt
                 </div>
@@ -405,7 +335,7 @@ function Score() {
                 {topAttempt}
                 </div>
               </div>
-              <div style={{ justifyContent: "center" }}>
+              <div className="justfiy-center">
                 <div>
                 Top Time
                 </div>
@@ -413,7 +343,7 @@ function Score() {
                 {topTime}
                 </div>
               </div>
-              <div style={{ justifyContent: "center" }}>
+              <div className="justfiy-center">
                 <div>
                 Games Played
                 </div>
@@ -491,15 +421,16 @@ function Information() {
 
   return (
     <>
-      <div style={{ overflow: "hidden" }}>
-        <button onClick={toggleScore} className="click">
+      <div className= "overflow-hidden">
+        <button onClick={toggleScore}className="hover:opacity-40">
           <img
             style={{
               background: "transparent",
-              width: "20px",
-              height: "20px",
+              width: "30px",
+              height: "30px",
               filter: "drop-shadow(0px 100px 0 rgba(5, 74, 145, 1))",
               transform: "translateY(-100px)",
+              marginRight: "5px"
             }}
             src={info}
             alt="Info"
@@ -508,28 +439,22 @@ function Information() {
       </div>
       <div
         aria-expanded={informationVisible}
-        style={{
-          ...overlayContainerStyle,
-          visibility: informationVisible ? "visible" : "hidden",
-        }}
+        className={` ${informationVisible ? 'visible' : 'hidden'} ${overlayContainerStyle}`}
+
       >
-        <div style={overlayStyle}>
-          <div>
-          <button onClick={toggleScore} style={{ float: "right" }} className="click">Close</button>
+        <div className={overlayStyle}>
+  <div className="flex justify-end mr-2">
+    <button onClick={toggleScore} className="hover:opacity-40" >Close</button>
+  </div>
+  <h1 className="mb-2 text-4xl font-bold border-b-2 border-Blue2 pb-2">How to play:</h1>
+  <h2 className="mb-4">Take a guess from the following list, correct characteristics will show up green and incorrect ones red. Use your knowledge to find the right answer!</h2>
+  <ul className="list-disc ml-8 text-start">
+    {firstElements.map((element, index) => (
+      <li key={index}>{element}</li>
+    ))}
+  </ul>
+</div>
 
-          </div>
-          <h1 style={{ marginBottom: "5px", fontSize: "35px", borderBottom: "2px Solid " }}>How to play:</h1>
-          <h2> Take a guess from the following list, correct characteristics will show up green and incorrect ones red. 
-            Use your knowledge to find the right answer !</h2>
-          <ul style={{textAlign: "left", listStyleType: "disc", marginLeft: "15px"}} className="a">
-            {firstElements.map((element, index) => (
-              <li  key={index}>{element}</li>
-            ))}
-          </ul>
-          
-
-
-        </div>
       </div>
     </>
   );

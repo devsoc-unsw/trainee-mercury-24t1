@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  db:
+    build: 
+      context: ./db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=algodle
+      - POSTGRES_PASSWORD=algodle
+    networks:
+      - postgres
+    volumes:
+      - db_vol:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    depends_on:
+      - "db"
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_USER=postgres
+      - DB_HOST=db
+      - DB_NAME=algodle
+      - DB_PASSWORD=algodle
+      - DB_PORT=5432
+    networks:
+      - postgres
+  
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    networks:
+      - postgres
+    volumes:
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
+    
+networks: 
+  postgres:
+    driver: bridge
+
+volumes:
+  db_vol:

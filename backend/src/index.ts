@@ -23,8 +23,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
+app.use(express.json());
 
-app.get("/", async (req: Request, res: Response) => {
+// Testing connection
+app.get("/test", async (req: Request, res: Response) => {
   try {
     await pool.query("SELECT 1");
     console.log("Database connection successful");

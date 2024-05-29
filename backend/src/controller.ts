@@ -21,7 +21,6 @@ export const register = async (req: Request, res: Response) => {
       [email, password],
     );
 
-    console.log("succesful");
     return res.json({ message: "Registration succesful" });
   } catch (err) {
     if (err instanceof Error) {
@@ -30,11 +29,11 @@ export const register = async (req: Request, res: Response) => {
       if (pgError.code === "23505") {
         res.status(409).json({ error: "Email already exists" });
       } else {
-        return res.status(500).json({ error: "Server e" });
+        return res.status(500).json({ error: "Server error " + err.message });
       }
     } else {
       console.error(err);
-      return res.status(500).json({ error: "Server errorrr" });
+      return res.status(500).json({ error: "Server error " + err });
     }
   }
 };
@@ -71,6 +70,9 @@ export const login = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "User not found" });
     }
   } catch (err) {
-    return res.status(500).json({ error: "Server error" });
+    if (err instanceof Error) {
+      return res.status(500).json({ error: "Server error " + err.message });
+    }
+    return res.status(500).json({ error: "Server error" + err });
   }
 };

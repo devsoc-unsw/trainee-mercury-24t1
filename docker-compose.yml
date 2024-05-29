@@ -1,11 +1,28 @@
 version: '3'
 
 services:
+  db:
+    build: 
+      context: ./db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=algodle
+      - POSTGRES_PASSWORD=algodle
+
   backend:
     build:
       context: ./backend
+    depends_on:
+      - "db"
     ports:
       - "3000:3000"
+    environment:
+      - DB_USER=team_mercury
+      - DB_HOST=postgres
+      - DB_NAME=team_mercury
+      - DB_PASSWORD=test
+      - DB_PORT=5432
   
   frontend:
     build:
@@ -13,8 +30,7 @@ services:
     ports:
       - "80:80"
     
-  db:
-    build: 
-      context: ./db
-    environment:
-      - POSTGRES_PASSWORD=algodle
+networks: 
+  postgres:
+    driver: bridge
+    

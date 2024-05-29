@@ -12,7 +12,7 @@ services:
     networks:
       - postgres
     volumes:
-      - db_vol:/var/lib/postgresql/data:ro
+      - db_vol:/var/lib/postgresql/data
 
   backend:
     build:
@@ -23,7 +23,7 @@ services:
       - "3000:3000"
     environment:
       - DB_USER=postgres
-      - DB_HOST=postgres
+      - DB_HOST=db
       - DB_NAME=algodle
       - DB_PASSWORD=algodle
       - DB_PORT=5432

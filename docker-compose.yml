@@ -11,6 +11,8 @@ services:
       - POSTGRES_PASSWORD=algodle
     networks:
       - postgres
+    volumes:
+      - db_vol:/var/lib/postgresql/data:ro
 
   backend:
     build:
@@ -41,4 +43,6 @@ services:
 networks: 
   postgres:
     driver: bridge
-    
+
+volumes:
+  db_vol:

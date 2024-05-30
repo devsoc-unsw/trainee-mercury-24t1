@@ -13,7 +13,10 @@ export default {
       'Blue4': '#81A4CD',
       'Blue5': '#DBE4EE',
       'Orange1': '#F17300',
-      'Pink2': '#FF73B3'
+      'Pink2': '#FF73B3',
+      'Green2': '#7FA6BB',
+      'Orange2': '#FFC6A5',
+      'Black': '#000000'
     },
     fontFamily: {
       'Inter': ['"Inter"']

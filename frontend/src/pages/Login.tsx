@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
-import stockPhoto from "../assets/stockPhoto.png";
+// import logo from "../assets/logo.png";
+import stockPhoto from "../assets/algomes2.jpg";
 
 export default function Login() {
   document.body.style.overflow = "hidden";
@@ -65,15 +65,15 @@ export default function Login() {
       <div className="w-2/5 flex flex-col justify-center items-center bg-Blue1">
         <div className="flex flex-col w-3/4">
           <div className="flex justify-center items-center mb-5">
-            <img className="w-14 h-14 mr-4" src={logo}></img>
-            <span className="text-[64px] text-Blue2 font-bold font-Inter">
-              AlgoDle
+            {/* <img className="w-14 h-14 mr-4" src={logo}></img> */}
+            <span className="text-[64px] text-black text-opacity-75 font-bold font-Inter">
+            🤓Algomes
             </span>
           </div>
-          <span className="text-[36px] text-Blue2 font-bold font-Inter mb-1.5">
+          <span className="text-[36px] text-black text-opacity-75 font-bold font-Inter mb-1.5">
             Welcome back!
           </span>
-          <span className="text-[20px] text-Blue2 font-bold font-Inter mb-1.5">
+          <span className="text-[20px] text-black text-opacity-75 font-bold font-Inter mb-1.5">
             Email Address
           </span>
           <input
@@ -82,7 +82,7 @@ export default function Login() {
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
-          <span className="text-[20px] text-Blue2 font-bold font-Inter mb-1.5">
+          <span className="text-[20px] text-black text-opacity-75 font-bold font-Inter mb-1.5">
             Password
           </span>
           <input
@@ -93,13 +93,13 @@ export default function Login() {
           />
           <div className="flex justify-center items-center mb-5">
             <button
-              className="text-[28px] text-Blue2 font-bold font-Inter bg-Pink1 hover:bg-Pink2 px-24 py-1.5 rounded-lg transition duration-500 hover:scale-110"
+              className="text-[28px] text-black text-opacity-75 font-bold font-Inter bg-white hover:bg-white px-24 py-1.5 rounded-lg transition duration-500 hover:scale-110"
               onClick={loginUser}
             >
               Login
             </button>
           </div>
-          <span className="text-Blue2 font-bold font-Inter">
+          <span className="text-black text-opacity-75 font-bold font-Inter">
             Don't have an account yet?{" "}
             <a href="/register">
               <span className="underline">Sign up</span>

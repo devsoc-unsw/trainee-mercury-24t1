@@ -9,7 +9,9 @@ import info from "../assets/info.png";
 // dark blue (texts) rgba(5, 74, 145, 1) or Blue2
 // pale Purple1
 
-const targets = [
+
+const algorithmTarget = [
+  ["Name", "Best Case","Worst Case","Average Case","Space Complexity","Stable","Classification"],
   ["Selection", "n^2", "n^2", "n^2", "1", "No", "Selection"],
   ["Bubble", "n", "n^2", "n^2", "1", "Yes", "Exchanging"],
   ["Insertion", "n", "n^2", "n^2", "1", "Yes", "Insertion"],
@@ -18,6 +20,19 @@ const targets = [
   ["Quick", "nlogn", "nlogn", "n^2", "logn", "No", "Partitioning"],
   ["Radix", "n", "n* k/d", "n* k/d", "n + 2^d", "Yes", "Non-comparison"],
 ];
+
+const languageTarget = [
+  ["Name", "Best Case","Worst Case","Average Case","Space Complexity","Stable","Classification"],
+  ["Selection", "n^2", "n^2", "n^2", "1", "No", "Selection"],
+  ["Bubble", "n", "n^2", "n^2", "1", "Yes", "Exchanging"],
+  ["Insertion", "n", "n^2", "n^2", "1", "Yes", "Insertion"],
+  ["Shell", "nlogn", "n^4/3", "n^3/2", "1", "No", "Insertion"],
+  ["Merge", "nlogn", "nlogn", "nlogn", "n", "Yes", "Merging"],
+  ["Quick", "nlogn", "nlogn", "n^2", "logn", "No", "Partitioning"],
+  ["Radix", "n", "n* k/d", "n* k/d", "n + 2^d", "Yes", "Non-comparison"],
+];
+
+
 
 const titleStyle = "w-1/2 bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg text-center shadow-md py-4 flex justify-between items-center";
 const overlayContainerStyle = "fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-10";
@@ -35,8 +50,20 @@ const arrowStyle: CSSProperties = {
 
 
 export default function Goddle() {
-  
+  const initialTargets =  {"Algorithm": algorithmTarget, "Programming Language": languageTarget };
+  const [targetName, setTargetName] = useState("Algorithm");
+  const [targetSets, setTargetSets] = useState(initialTargets);
+  const [targets, setTarget] = useState(algorithmTarget);
+
   document.body.className = "bg-Blue1"
+
+
+  const handleDropdownChange = (event: { target: { value: string; }; }) => {
+    const selectedTargetName = event.target.value;
+    setTargetName(selectedTargetName);
+    setTarget(targetSets[selectedTargetName as keyof typeof targetSets]); 
+  };
+
   return (
     <div className="text-Blue2">
       {/* <div style={{ padding: "10px 10px" }}>
@@ -52,18 +79,25 @@ export default function Goddle() {
         {Score()} 
 
         </div>
-        <p className="text-2xl">Guess The Sorting Algorithm</p>
+        <p className="text-2xl">Guess The {targetName}</p>
         <div>
-        {Information()} 
+        {Information(targets)} 
         </div>
       </div>
-      <h2>{Game()}</h2>
+      <div>
+      <select onChange={handleDropdownChange} value={targetName}>
+          {Object.keys(initialTargets).map((target) => (
+            <option key={target} value={target}>{target}</option>
+          ))}
+        </select>
+      </div>
+      <h2>{Game(targets)}</h2>
 
     </div>
   );
 }
 
-function Game() {
+function Game(targets: string[][]) {
   
   const number = getRandomNumber(0, targets.length);
   const [target, setTarget] = useState(targets[number]);
@@ -179,13 +213,10 @@ function Game() {
         <table className="w-full gap-y-100 mt-10">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Best Case</th>
-              <th>Worst Case</th>
-              <th>Average Case</th>
-              <th>Space Complexity</th>
-              <th>Stable</th>
-              <th>Classification</th>
+            {targets[0].map((name) => (
+              <th>{name}</th>
+       
+            ))}
             </tr>
           </thead>
           <tbody>
@@ -405,7 +436,7 @@ function AddtoScore (time: number,NumberOfAttempts: number) {
   }
 }
 
-function Information() {
+function Information(targets: string[][]) {
   const [informationVisible, setVisibility] = useState(false);
   const firstElements = targets.map(subArray => subArray[0]);
   const toggleScore = (event: { preventDefault: () => void; }) => {
@@ -459,3 +490,4 @@ function Information() {
     </>
   );
 }
+

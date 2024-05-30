@@ -21,7 +21,6 @@ export default {
     fontFamily: {
       'Inter': ['"Inter"']
     },
-    extend: {},
   },
   plugins: [],
 };

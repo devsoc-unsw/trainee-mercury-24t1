@@ -1,4 +1,4 @@
-import React, { CSSProperties, useState } from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 import stats from "../assets/stats.png";
 import info from "../assets/info.png";
 
@@ -36,8 +36,10 @@ const languageTarget = [
 
 const titleStyle = "w-1/2 bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg text-center shadow-md py-4 flex justify-between items-center";
 const overlayContainerStyle = "fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-10";
-const overlayStyle = "w-1/2 bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg shadow-md py-4 flex flex-col";
-const formStyle = "w-1/3 bg-Purple1 rounded-md font-sans text-lg text-center flex items-center mx-auto mt-10 justify-center";
+const overlayStyle = "w-1/2 bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg shadow-md py-4 flex flex-col ";
+const overlayStyleForm = "w-auto bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg shadow-md py-4 flex flex-col ";
+
+const gameStyle = "w-1/3 bg-Purple1 rounded-md font-sans text-lg text-center flex items-center mx-auto mt-10 justify-center";
 const inputStyle = "bg-Purple1 p-1 w-full placeholder-Blue2 placeholder-opacity-60";
 const arrowStyle: CSSProperties = {
   border: "solid rgba(5, 74, 145, 1)",
@@ -50,7 +52,8 @@ const arrowStyle: CSSProperties = {
 
 
 export default function Goddle() {
-  const initialTargets =  {"Algorithm": algorithmTarget, "Programming Language": languageTarget };
+  var initialTargets = {};
+  initialTargets =  {"Algorithm": algorithmTarget, "Programming Language": languageTarget };
   const [targetName, setTargetName] = useState("Algorithm");
   const [targetSets, setTargetSets] = useState(initialTargets);
   const [targets, setTarget] = useState(algorithmTarget);
@@ -62,6 +65,14 @@ export default function Goddle() {
     const selectedTargetName = event.target.value;
     setTargetName(selectedTargetName);
     setTarget(targetSets[selectedTargetName as keyof typeof targetSets]); 
+  };
+
+  const addNewTarget = (newTarget:FormData) => {  
+   
+    setTargetSets((prevTargetSets) => ({
+      ...prevTargetSets,
+      ...newTarget
+    }));
   };
 
   return (
@@ -86,10 +97,11 @@ export default function Goddle() {
       </div>
       <div>
       <select onChange={handleDropdownChange} value={targetName}>
-          {Object.keys(initialTargets).map((target) => (
+          {Object.keys(targetSets).map((target) => (
             <option key={target} value={target}>{target}</option>
           ))}
         </select>
+        <NewTargetForm onFormSubmit={addNewTarget}/>
       </div>
       <h2>{Game(targets)}</h2>
 
@@ -112,7 +124,16 @@ function Game(targets: string[][]) {
   const [numberOfAttempts, setnumberOfAttempts] = useState<number>(0);
   const [startingTime, setStartingTime] = useState<number>(0);
 
-
+  
+  useEffect(() => {
+    const number = getRandomNumber(0, targets.length);
+    setTarget(targets[number]);
+    setSubmitedAnswers([]);
+    setValue("");
+    setWon(false);
+    setnumberOfAttempts(0);
+    setStartingTime(new Date().getTime());
+  }, [targets]);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
@@ -134,7 +155,7 @@ function Game(targets: string[][]) {
       return;
     }
     let answer = null;
-    for (let i = 0; i < targets.length; i++) {
+    for (let i = 1; i < targets.length; i++) {
       if (value.toLocaleLowerCase() == targets[i][0].toLocaleLowerCase()) {
         answer = targets[i];
       }
@@ -187,7 +208,7 @@ function Game(targets: string[][]) {
   return (
     <div>
       <div className = "relative text-center">
-        <form onSubmit={handleSubmit} className={formStyle}>
+        <form onSubmit={handleSubmit} className={gameStyle}>
           {!won && (
             <input
               type="text"
@@ -490,4 +511,124 @@ function Information(targets: string[][]) {
     </>
   );
 }
+type FormData = {
+  [category: string]: any; // Change `any` to the type of your targets if possible
+};
 
+type OnFormSubmitType = (formData: FormData) => void;
+interface NewTargetFormProps {
+  onFormSubmit: OnFormSubmitType;
+}
+
+
+
+function NewTargetForm({onFormSubmit}: NewTargetFormProps) {
+  const [newTargetFormVisible, setVisibility] = useState(false);
+
+
+  const toggleNewTargetForm= (event: { preventDefault: () => void; }) => {
+    if (newTargetFormVisible == false) {
+      setVisibility(true);
+    } else {
+      setVisibility(false);
+    }
+    event.preventDefault(); // Prevent the default form submission behavior
+  }
+
+  const [formTitle, setFormTitle] = useState("Your Title");
+  const [formRows, setFormRows] = useState<string[][]>(  [["Name", "Characteristic 1","Characteristic 2","Characteristic 3"],
+  ["", "", "", ""]]);
+
+  const handleTitleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+    setFormTitle(event.target.value);
+  };
+
+  const handleAddRow = () => {
+    setFormRows([...formRows, Array(formRows[0].length).fill("")]);
+  };
+
+  const handleAddColumn = () => {
+    setFormRows(formRows.map(row => [...row, ""]));
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, rowIndex: number, columnIndex: number) => {
+    const updatedRows = [...formRows];
+    updatedRows[rowIndex][columnIndex] = event.target.value;
+    setFormRows(updatedRows);
+  };
+//@todo after we have managed to save them long term we need to look into avoiding reapating titles ?
+  const handleSubmit = (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+    if (formTitle === '') {
+      alert("Your set needs a title");
+      return;
+    } else if (formRows.some(row => row.some(cell => cell.trim() === ''))) {
+      alert("Please fill the whole set");
+      return;
+    }
+    const formData = {
+      [formTitle]: formRows
+    };
+    onFormSubmit(formData);
+  };
+
+  return (
+    <>
+      <div className= "overflow-hidden">
+        <button onClick={toggleNewTargetForm} className="hover:opacity-40">
+          <img
+            style={{
+              background: "transparent",
+              width: "30px",
+              height: "30px",
+              filter: "drop-shadow(0px 100px 0 rgba(5, 74, 145, 1))",
+              transform: "translateY(-100px)",
+              marginLeft: "10px"
+            }}
+            src={stats}
+            alt="Statistics"
+          />
+        </button>
+      </div>
+      <div
+        aria-expanded={newTargetFormVisible}
+        className={` ${newTargetFormVisible ? 'visible' : 'hidden'} ${overlayContainerStyle}`}
+      >
+
+        <div className={overlayStyleForm}>
+          <div className="justify-between float-right">
+          <button onClick={toggleNewTargetForm} className="hover:opacity-40 float-right mr-5">Close</button>
+
+          </div>
+          <input type="text" placeholder="Title" value={formTitle} onChange={handleTitleChange} className="text-center justify-center margin-auto"/>
+
+          <form onSubmit={handleSubmit} >
+
+  
+        <table className="text-xs">
+          <tbody>
+            {formRows.map((row, rowIndex) => (
+              <tr key={rowIndex}>
+                {row.map((cell, columnIndex) => (
+                  <td key={columnIndex}>
+                    <input
+                      type="text"
+                      value={cell}
+                      onChange={(event) => handleInputChange(event, rowIndex, columnIndex)}
+                    />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <button type="button" onClick={handleAddRow}>Add Row</button>
+        <button type="button" onClick={handleAddColumn}>Add Column</button>
+        <button type="submit">Submit</button>
+      </form>
+
+        </div>
+      </div>
+    </>
+  );
+}

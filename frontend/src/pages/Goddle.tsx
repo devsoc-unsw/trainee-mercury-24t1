@@ -1,6 +1,9 @@
 import React, { CSSProperties, useEffect, useState } from "react";
 import stats from "../assets/stats.png";
 import info from "../assets/info.png";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import { AnimatePresence } from "framer-motion";
 
 //To do:
 // Priority 1:Handle anser with extra white space (we don't have the lib config to use .replaceALl either add libes20221 or do it in another way),  Handle Answer Already submmited
@@ -52,13 +55,14 @@ const arrowStyle: CSSProperties = {
 
 
 export default function Goddle() {
+
+  document.body.className = "bg-Blue1"
   var initialTargets = {};
   initialTargets = { "Algorithm": algorithmTarget, "Programming Language": languageTarget };
   const [targetName, setTargetName] = useState("Algorithm");
   const [targetSets, setTargetSets] = useState(initialTargets);
   const [targets, setTarget] = useState(algorithmTarget);
-
-  document.body.className = "bg-Blue1"
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
 
   const handleDropdownChange = (event: { target: { value: string; }; }) => {
@@ -77,6 +81,8 @@ export default function Goddle() {
 
   return (
     <div className="text-Blue2">
+      <Navbar toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
+      <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
       {/* <div style={{ padding: "10px 10px" }}>
         <a href="/Home">Home </a>
         <a style={{ color: "rgba(228, 193, 249, 1)" }} href="/Goddle">
@@ -90,7 +96,7 @@ export default function Goddle() {
           {Score()}
 
         </div>
-        <p className="text-2xl">Guess The {targetName}</p>
+        <p className="text-2xl">Guess The Sorting Algorithm</p>
         <div>
           {Information(targets)}
         </div>

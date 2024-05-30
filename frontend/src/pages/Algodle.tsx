@@ -2,9 +2,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AlgodleData from '../other/AlgodleData.json'
 import Heart from "../assets/Heart.png";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import { AnimatePresence } from "framer-motion";
 
 export default function Algodle() {
   //document.body.style.overflow = 'hidden';
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const randomNumber = Math.floor(Math.random() * 5);
 
   const [algoIndex, setAlgoIndex] = useState(randomNumber);
@@ -67,6 +71,8 @@ export default function Algodle() {
 
   return (
     <div>
+      <Navbar toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
+      <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
       <div className='flex flex-col justify-center items-center w-full h-screen bg-Blue1'>
         <div className='flex justify-center items-center text-[30px] text-Blue2 font-bold font-Inter bg-Yellow1 px-16 py-4 mb-10'>Algodle</div>
         <div className='flex'>

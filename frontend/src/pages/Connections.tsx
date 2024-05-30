@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import { AnimatePresence } from "framer-motion";
 
 type Category = {
     category: string;
@@ -20,6 +23,8 @@ const shuffleArray = (array: string[]): string[] => {
 };
 
 const Connections: React.FC = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
     const categories: Category[] = [
         { category: 'Category 1', words: ['SIGMA', 'MEW', 'GYM', 'GYATT'] },
         { category: 'Category 2', words: ['COMPUTER', 'HEADPHONES', 'PHONE', 'EARPHONES'] },
@@ -71,23 +76,27 @@ const Connections: React.FC = () => {
     const allGreen = Object.values(colors).every(color => color === 'bg-green-500');
 
     return (
-        <div className="grid grid-cols-1 justify-items-center">
-            <h1 className="pt-10 text-black mt-2 mb-5">Connections</h1>
-            <div className="grid grid-cols-4 gap-4 justify-items-center h-[500px] w-[800px]">
-                {shuffledWords.map((word) => (
-                    <div
-                        key={word}
-                        className={`${colors[word]} h-full w-full mt-5 mb-5 text-center flex items-center justify-center rounded-md cursor-pointer`}
-                        onClick={() => {
-                            const category = categories.find(category => category.words.includes(word))?.category || '';
-                            handleClick(word, category);
-                        }}
-                    >
-                        {word}
-                    </div>
-                ))}
+        <div>
+            <Navbar toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
+            <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
+            <div className="grid grid-cols-1 justify-items-center">
+                <h1 className="pt-10 text-black mt-2 mb-5">Connections</h1>
+                <div className="grid grid-cols-4 gap-4 justify-items-center h-[500px] w-[800px]">
+                    {shuffledWords.map((word) => (
+                        <div
+                            key={word}
+                            className={`${colors[word]} h-full w-full mt-5 mb-5 text-center flex items-center justify-center rounded-md cursor-pointer`}
+                            onClick={() => {
+                                const category = categories.find(category => category.words.includes(word))?.category || '';
+                                handleClick(word, category);
+                            }}
+                        >
+                            {word}
+                        </div>
+                    ))}
+                </div>
+                {allGreen && <p className='mt-10'>Congratulations! You completed it!</p>}
             </div>
-            {allGreen && <p className='mt-10'>Congratulations! You completed it!</p>}
         </div>
     );
 };

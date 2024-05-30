@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { Pool } from "pg";
-import { login, register } from "./controller";
+import { getGoddleStats, login, register } from "./controller";
 import { Request, Response } from "express";
 
 dotenv.config();
@@ -38,6 +38,7 @@ app.get("/test", async (req: Request, res: Response) => {
 });
 app.post("/register", register);
 app.post("/login", login);
+app.post("/get-goddle-stats", getGoddleStats);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

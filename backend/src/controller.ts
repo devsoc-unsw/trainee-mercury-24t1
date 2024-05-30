@@ -86,3 +86,41 @@ export const login = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Server error" + err });
   }
 };
+
+export const getGoddleStats = async (req: Request, res: Response) => {
+  try {
+    const userId = req.body.userId;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User id not provided" });
+    }
+
+    const stats = await pool.query(
+      `
+  SELECT top_attempt, top_time, games_played
+  FROM goddle_stats
+  WHERE user_id = $1
+  `,
+      [userId],
+    );
+
+    if (stats.rows.length <= 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const userStats = stats.rows[0];
+
+    return res.json({
+      topAttempt: userStats.top_attempt,
+      topTime: userStats.top_time,
+      gamesPlayed: userStats.games_played,
+    });
+  } catch (err) {
+    if (err instanceof Error) {
+      return res.status(500).json({ error: "Server error " + err.message });
+    }
+    return res.status(500).json({ error: "Server error" + err });
+  }
+};
+
+export const updateGoddleStats = async (req: Request, res: Response) => {};

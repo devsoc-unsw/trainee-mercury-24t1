@@ -13,7 +13,7 @@ export const register = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Password is empty" });
     }
 
-    const userId = await pool.query(
+    const userResults = await pool.query(
       `
   INSERT INTO users(email, password)
   VALUES ($1, $2)
@@ -21,6 +21,8 @@ export const register = async (req: Request, res: Response) => {
   `,
       [email, password],
     );
+
+    const userId = userResults.rows[0].id;
 
     await pool.query(
       `
@@ -61,9 +63,8 @@ export const login = async (req: Request, res: Response) => {
 
     const result = await pool.query(
       `
-  SELECT email, password FROM Users
+  SELECT id, email, password FROM Users
   WHERE email = $1
-
   `,
       [email],
     );
@@ -71,7 +72,7 @@ export const login = async (req: Request, res: Response) => {
     if (result.rows.length > 0) {
       const user = result.rows[0];
       if (user.password === password) {
-        return res.json({ message: "Login succesful" });
+        return res.json({ message: "Login succesful", userId: user.id });
       } else {
         return res.status(401).json({ error: "Wrong password" });
       }

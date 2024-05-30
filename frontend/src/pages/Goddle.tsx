@@ -51,19 +51,19 @@ const languageTarget = [
 ];
 
 const titleStyle =
-  "w-1/2 bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg text-center shadow-md py-4 flex justify-between items-center";
+  "w-1/2 bg-white mx-auto mt-10 rounded-md font-sans text-lg text-center shadow-md py-4 px-4 flex justify-between items-center";
 const overlayContainerStyle =
   "fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-10";
 const overlayStyle =
   "w-1/2 bg-Yellow1 mx-auto mt-10 rounded-md font-sans text-lg shadow-md py-4 flex flex-col ";
 const overlayStyleForm =
-  "w-auto bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg shadow-md py-4 flex flex-col ";
+  "w-auto bg-white mx-auto mt-10 rounded-md font-sans text-lg shadow-md py-4 flex flex-col ";
 const changeGameStyle =
-  "w-1/3 bg-Yellow1 rounded-md font-sans text-lg text-center flex items-center mx-auto mt-2 justify-center";
+  "w-1/3 bg-white rounded-md my-6 py-2 font-sans text-lg text-center flex items-center mx-auto justify-center";
 const gameStyle =
-  "w-1/3 bg-Purple1 rounded-md font-sans text-lg text-center flex items-center mx-auto mt-3 justify-center";
+  "w-1/3 bg-white rounded-md font-sans text-lg text-center flex items-center mx-auto mt-3 justify-center";
 const inputStyle =
-  "bg-Purple1 p-1 w-full placeholder-Blue2 placeholder-opacity-60";
+  "bg-white p-1 w-full placeholder-Blue2 placeholder-opacity-60";
 const arrowStyle: CSSProperties = {
   border: "solid rgba(5, 74, 145, 1)",
   borderWidth: "0 3px 3px 0",
@@ -129,15 +129,15 @@ export default function Goddle() {
         <a href="/broken-telephone">BrokenTelephone </a>
       </div> */}
       <div className={titleStyle}>
-        <div>{Score()}</div>
-        <p className="text-2xl">Guess The Sorting Algorithm</p>
-        <div>{Information(targets)}</div>
+        <div className="mt-1">{Score()}</div>
+        <p className="text-2xl">Goddle ~ Guess The Sorting Algorithm</p>
+        <div className="mt-2">{Information(targets)}</div>
       </div>
       <div className={changeGameStyle}>
         <select
           onChange={handleDropdownChange}
           value={targetName}
-          className="bg-Yellow1"
+          className="bg-white"
         >
           {Object.keys(targetSets).map((target) => (
             <option key={target} value={target}>
@@ -696,7 +696,7 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
             placeholder="Title"
             value={formTitle}
             onChange={handleTitleChange}
-            className="bg-Yellow1 border-rounded-lg text-center justify-center border-8 border-Purple1"
+            className="bg-Yellow1 border-rounded-lg text-center justify-center border-2 mx-2 my-2 border-Purple1 rounded-md"
           />
 
           <form onSubmit={handleSubmit}>
@@ -713,7 +713,7 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
                             onChange={(event) =>
                               handleInputChange(event, rowIndex, columnIndex)
                             }
-                            className="bg-Yellow1 border-rounded-lg  border-4 border-Purple1"
+                            className="bg-Yellow1 border-rounded-lg  mx-2 border-2 border-Purple1 rounded-sm mt-2 justify-center"
                           />
                         </div>
 

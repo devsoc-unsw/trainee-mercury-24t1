@@ -76,11 +76,13 @@ const Connections: React.FC = () => {
     const allGreen = Object.values(colors).every(color => color === 'bg-green-500');
 
     return (
-        <div>
+        <div className='bg-Blue1 h-screen'>
             <Navbar toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
             <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
             <div className="grid grid-cols-1 justify-items-center">
-                <h1 className="pt-10 text-black mt-2 mb-5">Connections</h1>
+            <div className='flex justify-center items-center text-[30px] text-Blue2 font-bold font-Inter rounded-md bg-Green1 px-16 mt-12 py-6 mb-10'>Connections</div>
+
+                {/* <h1 className="pt-10 text-black mt-2 mb-5">Connections</h1> */}
                 <div className="grid grid-cols-4 gap-4 justify-items-center h-[500px] w-[800px]">
                     {shuffledWords.map((word) => (
                         <div

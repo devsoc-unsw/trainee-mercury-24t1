@@ -1,30 +1,56 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import stockPhoto from "../assets/stockPhoto.png";
 
 export default function Login() {
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow = "hidden";
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const loginUser = () => {
-    if (email === '' || password === '') {
+  const loginUser = async () => {
+    if (email === "" || password === "") {
       alert("Incomplete Fields");
     } else {
-      const user = localStorage.getItem('user');
-      if (user) {
-        const parsedUser = JSON.parse(user);
-        if (parsedUser.email === email && parsedUser.password === password) {
-          alert("Login successful!");
-          navigate('/goddle'); 
-        } else {
-          alert("Invalid email or password");
+      // const user = localStorage.getItem('user');
+      // if (user) {
+      //   const parsedUser = JSON.parse(user);
+      //   if (parsedUser.email === email && parsedUser.password === password) {
+      //     alert("Login successful!");
+      //     navigate('/home');
+      //   } else {
+      //     alert("Invalid email or password");
+      //   }
+      // } else {
+      //   alert("No registered user found");
+      // }
+      try {
+        // Call the API
+        const res = await fetch("http://localhost:3000/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await res.json();
+
+        // Throw error if fetch is unsuccessful
+        if (!res.ok) {
+          throw new Error(data.error);
         }
-      } else {
-        alert("No registered user found");
+
+        alert("Login successful!");
+        navigate("/home");
+      } catch (err) {
+        if (err instanceof Error) {
+          console.error(err.message);
+        } else {
+          console.error(err);
+        }
       }
     }
   };
@@ -38,21 +64,29 @@ export default function Login() {
         <div className="flex flex-col w-3/4">
           <div className="flex justify-center items-center mb-5">
             <img className="w-14 h-14 mr-4" src={logo}></img>
-            <span className="text-[64px] text-Blue2 font-bold font-Inter">AlgoDle</span>
+            <span className="text-[64px] text-Blue2 font-bold font-Inter">
+              AlgoDle
+            </span>
           </div>
-          <span className="text-[36px] text-Blue2 font-bold font-Inter mb-1.5">Welcome back!</span>
-          <span className="text-[20px] text-Blue2 font-bold font-Inter mb-1.5">Email Address</span>
+          <span className="text-[36px] text-Blue2 font-bold font-Inter mb-1.5">
+            Welcome back!
+          </span>
+          <span className="text-[20px] text-Blue2 font-bold font-Inter mb-1.5">
+            Email Address
+          </span>
           <input
             className="h-12 p-2 rounded text-lg mb-4"
             type="text"
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
-          <span className="text-[20px] text-Blue2 font-bold font-Inter mb-1.5">Password</span>
+          <span className="text-[20px] text-Blue2 font-bold font-Inter mb-1.5">
+            Password
+          </span>
           <input
             className="h-12 p-2 rounded text-lg mb-6"
             type="text"
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
           <div className="flex justify-center items-center mb-5">
@@ -63,9 +97,14 @@ export default function Login() {
               Login
             </button>
           </div>
-          <span className="text-Blue2 font-bold font-Inter">Don't have an account yet? <a href="/register"><span className="underline">Sign up</span></a></span>
+          <span className="text-Blue2 font-bold font-Inter">
+            Don't have an account yet?{" "}
+            <a href="/register">
+              <span className="underline">Sign up</span>
+            </a>
+          </span>
         </div>
       </div>
     </div>
-  )
+  );
 }

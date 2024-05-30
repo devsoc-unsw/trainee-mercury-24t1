@@ -1,6 +1,4 @@
 import React, { CSSProperties, useEffect, useState } from "react";
-import stats from "../assets/stats.png";
-import info from "../assets/info.png";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import { AnimatePresence } from "framer-motion";
@@ -37,11 +35,11 @@ const languageTarget = [
 
 
 
-const titleStyle = "w-1/2 bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg text-center shadow-md py-4 flex justify-between items-center";
+const titleStyle = "w-1/2 bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg text-center shadow-md py-4 flex justify-around items-center";
 const overlayContainerStyle = "fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-10";
 const overlayStyle = "w-1/2 bg-Yellow1 mx-auto mt-10 rounded-md font-sans text-lg shadow-md py-4 flex flex-col ";
 const overlayStyleForm = "w-auto bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg shadow-md py-4 flex flex-col ";
-const changeGameStyle = "w-1/3 bg-Yellow1 rounded-md font-sans text-lg text-center flex items-center mx-auto mt-2 justify-center";
+const changeGameStyle = "w-1/5 bg-Yellow1 rounded-md font-sans text-lg text-center flex mx-auto mt-2  items-center";
 const gameStyle = "w-1/3 bg-Purple1 rounded-md font-sans text-lg text-center flex items-center mx-auto mt-3 justify-center";
 const inputStyle = "bg-Purple1 p-1 w-full placeholder-Blue2 placeholder-opacity-60";
 const arrowStyle: CSSProperties = {
@@ -83,32 +81,29 @@ export default function Goddle() {
     <div className="text-Blue2">
       <Navbar toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
       <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
-      {/* <div style={{ padding: "10px 10px" }}>
-        <a href="/Home">Home </a>
-        <a style={{ color: "rgba(228, 193, 249, 1)" }} href="/Goddle">
-          Goddle{" "}
-        </a>
-        <a href="/Algodle">Algodle </a>
-        <a href="/broken-telephone">BrokenTelephone </a>
-      </div> */}
       <div className={titleStyle}>
         <div >
           {Score()}
 
         </div>
-        <p className="text-2xl">Guess The Sorting Algorithm</p>
+        <p className="text-2xl">Guess The {targetName}</p>
         <div>
           {Information(targets)}
         </div>
       </div>
       <div className={changeGameStyle}>
-        <select onChange={handleDropdownChange} value={targetName} className="bg-Yellow1">
-          {Object.keys(targetSets).map((target) => (
-            <option key={target} value={target}>{target}</option>
-          ))}
-        </select>
-        <NewTargetForm onFormSubmit={addNewTarget} />
+        <div className="flex items-center justify-center self-center">
+          <select onChange={handleDropdownChange} value={targetName} className="bg-Yellow1">
+            {Object.keys(targetSets).map((target) => (
+              <option key={target} value={target}>{target}</option>
+            ))}
+          </select>
+        </div>
+        <div className="ml-auto">
+          <NewTargetForm onFormSubmit={addNewTarget} />
+        </div>
       </div>
+
       <h2>{Game(targets)}</h2>
 
     </div>
@@ -357,18 +352,11 @@ function Score() {
     <>
       <div className="overflow-hidden">
         <button onClick={toggleScore} className="hover:opacity-40">
-          <img
-            style={{
-              background: "transparent",
-              width: "30px",
-              height: "30px",
-              filter: "drop-shadow(0px 100px 0 rgba(5, 74, 145, 1))",
-              transform: "translateY(-100px)",
-              marginLeft: "10px"
-            }}
-            src={stats}
-            alt="Statistics"
-          />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+          </svg>
+
+
         </button>
       </div>
       <div
@@ -463,33 +451,23 @@ function AddtoScore(time: number, NumberOfAttempts: number) {
 function Information(targets: string[][]) {
   const [informationVisible, setVisibility] = useState(false);
   const firstElements = targets.map(subArray => subArray[0]);
-  const toggleScore = (event: { preventDefault: () => void; }) => {
+  const toggleInformation = (event: { preventDefault: () => void; }) => {
     if (informationVisible == false) {
       setVisibility(true);
     } else {
       setVisibility(false);
     }
-    event.preventDefault(); // Prevent the default form submission behavior
-
-
+    event.preventDefault();
   }
 
   return (
     <>
       <div className="overflow-hidden">
-        <button onClick={toggleScore} className="hover:opacity-40">
-          <img
-            style={{
-              background: "transparent",
-              width: "30px",
-              height: "30px",
-              filter: "drop-shadow(0px 100px 0 rgba(5, 74, 145, 1))",
-              transform: "translateY(-100px)",
-              marginRight: "5px"
-            }}
-            src={info}
-            alt="Info"
-          />
+        <button onClick={toggleInformation} className="hover:opacity-40">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+          </svg>
+
         </button>
       </div>
       <div
@@ -499,13 +477,13 @@ function Information(targets: string[][]) {
       >
         <div className={overlayStyle}>
           <div className="flex justify-end mr-2">
-            <button onClick={toggleScore} className="hover:opacity-40" >Close</button>
+            <button onClick={toggleInformation} className="hover:opacity-40" >Close</button>
           </div>
           <h1 className="mb-2 text-4xl font-bold border-b-2 border-Blue2 pb-2">How to play:</h1>
           <h2 className="mb-4">Take a guess from the following list, correct characteristics will show up green and incorrect ones red. Use your knowledge to find the right answer!</h2>
           <ul className="list-disc ml-8 text-start">
             {firstElements.map((element, index) => (
-              <li key={index}>{element}</li>
+              <li key={index} className={index === 0 ? 'hidden' : ''}>{element}</li>
             ))}
           </ul>
         </div>
@@ -601,10 +579,10 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
 
   return (
     <>
-      <div className="overflow-hidden">
-        <button onClick={toggleNewTargetForm} className="hover:opacity-40">
+      <div className="overflow-hidden ">
+        <button onClick={toggleNewTargetForm} className="hover:opacity-40 float-right">
 
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 float-right">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
 
@@ -641,13 +619,13 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
                         </div>
 
                         <button type="button" className={rowIndex !== formRows.length - 1 ? 'hidden' : ''} onClick={() => handleDeleteColumn(columnIndex)}>
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-3">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                           </svg>                        </button>
                       </td>
                     ))}
                     <button type="button" onClick={() => handleDeleteRow(rowIndex)}>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="size-3">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                       </svg>
                     </button>

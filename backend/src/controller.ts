@@ -123,4 +123,39 @@ export const getGoddleStats = async (req: Request, res: Response) => {
   }
 };
 
-export const updateGoddleStats = async (req: Request, res: Response) => {};
+export const updateGoddleStats = async (req: Request, res: Response) => {
+  try {
+    const userId = req.body.userId;
+    const topAttempt = req.body.topAttempt;
+    const topTime = req.body.topTime;
+    const gamesPlayed = req.body.gamesPlayed;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User id not provided" });
+    }
+
+    if (!topAttempt || !topTime || !gamesPlayed) {
+      return res
+        .status(400)
+        .json({ error: "topAttempt, topTime, and gamesPlayed cant be empty" });
+    }
+
+    await pool.query(
+      `
+    UPDATE goddle_stats 
+    SET top_attempt = $1,
+        top_time = $2,
+        games_played = $3
+    WHERE user_id = $4
+    `,
+      [topAttempt, topTime, gamesPlayed, userId],
+    );
+
+    return res.json({ message: "Update successful" });
+  } catch (err) {
+    if (err instanceof Error) {
+      return res.status(500).json({ error: "Server error " + err.message });
+    }
+    return res.status(500).json({ error: "Server error" + err });
+  }
+};

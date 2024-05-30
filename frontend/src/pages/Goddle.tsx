@@ -10,9 +10,16 @@ import { AnimatePresence } from "framer-motion";
 // dark blue (texts) rgba(5, 74, 145, 1) or Blue2
 // pale Purple1
 
-
 const algorithmTarget = [
-  ["Name", "Best Case", "Worst Case", "Average Case", "Space Complexity", "Stable", "Classification"],
+  [
+    "Name",
+    "Best Case",
+    "Worst Case",
+    "Average Case",
+    "Space Complexity",
+    "Stable",
+    "Classification",
+  ],
   ["Selection", "n^2", "n^2", "n^2", "1", "No", "Selection"],
   ["Bubble", "n", "n^2", "n^2", "1", "Yes", "Exchanging"],
   ["Insertion", "n", "n^2", "n^2", "1", "Yes", "Insertion"],
@@ -23,7 +30,15 @@ const algorithmTarget = [
 ];
 
 const languageTarget = [
-  ["Name", "Best Case", "Worst Case", "Average Case", "Space Complexity", "Stable", "Classification"],
+  [
+    "Name",
+    "Best Case",
+    "Worst Case",
+    "Average Case",
+    "Space Complexity",
+    "Stable",
+    "Classification",
+  ],
   ["Selection", "n^2", "n^2", "n^2", "1", "No", "Selection"],
   ["Bubble", "n", "n^2", "n^2", "1", "Yes", "Exchanging"],
   ["Insertion", "n", "n^2", "n^2", "1", "Yes", "Insertion"],
@@ -33,15 +48,20 @@ const languageTarget = [
   ["Radix", "n", "n* k/d", "n* k/d", "n + 2^d", "Yes", "Non-comparison"],
 ];
 
-
-
-const titleStyle = "w-1/2 bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg text-center shadow-md py-4 flex justify-around items-center";
-const overlayContainerStyle = "fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-10";
-const overlayStyle = "w-1/2 bg-Yellow1 mx-auto mt-10 rounded-md font-sans text-lg shadow-md py-4 flex flex-col ";
-const overlayStyleForm = "w-auto bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg shadow-md py-4 flex flex-col ";
-const changeGameStyle = "w-1/5 bg-Yellow1 rounded-md font-sans text-lg text-center flex mx-auto mt-2  items-center";
-const gameStyle = "w-1/3 bg-Purple1 rounded-md font-sans text-lg text-center flex items-center mx-auto mt-3 justify-center";
-const inputStyle = "bg-Purple1 p-1 w-full placeholder-Blue2 placeholder-opacity-60";
+const titleStyle =
+  "w-1/2 bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg text-center shadow-md py-4 flex justify-evenly items-center";
+const overlayContainerStyle =
+  "fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-10";
+const overlayStyle =
+  "w-1/2 bg-Yellow1 mx-auto mt-10 rounded-md font-sans text-lg shadow-md py-4 flex flex-col ";
+const overlayStyleForm =
+  "w-auto bg-Purple1 mx-auto mt-10 rounded-md font-sans text-lg shadow-md py-4 flex flex-col ";
+const changeGameStyle =
+  "w-1/3 bg-Yellow1 rounded-md font-sans text-lg text-center flex items-center mx-auto mt-2 justify-evenly";
+const gameStyle =
+  "w-1/3 bg-Purple1 rounded-md font-sans text-lg text-center flex items-center mx-auto mt-3 justify-center";
+const inputStyle =
+  "bg-Purple1 p-1 w-full placeholder-Blue2 placeholder-opacity-60";
 const arrowStyle: CSSProperties = {
   border: "solid rgba(5, 74, 145, 1)",
   borderWidth: "0 3px 3px 0",
@@ -51,29 +71,46 @@ const arrowStyle: CSSProperties = {
   transform: "rotate(-45deg)",
 };
 
-
 export default function Goddle() {
-
-  document.body.className = "bg-Blue1"
-  var initialTargets = {};
-  initialTargets = { "Algorithm": algorithmTarget, "Programming Language": languageTarget };
+  document.body.className = "bg-Blue1";
+  const initialTargets = {
+    Algorithm: algorithmTarget,
+    "Programming Language": languageTarget,
+  };
   const [targetName, setTargetName] = useState("Algorithm");
   const [targetSets, setTargetSets] = useState(initialTargets);
   const [targets, setTarget] = useState(algorithmTarget);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Fetch user stats
+  useEffect(() => {
+    const fetchStats = async () => {
+      const userId = localStorage.getItem("userId");
 
-  const handleDropdownChange = (event: { target: { value: string; }; }) => {
+      const res = await fetch("http://localhost:3000/get-goddle-stats", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      });
+
+      const data = await res.json();
+      console.log(data);
+    };
+    fetchStats();
+  }, []);
+
+  const handleDropdownChange = (event: { target: { value: string } }) => {
     const selectedTargetName = event.target.value;
     setTargetName(selectedTargetName);
     setTarget(targetSets[selectedTargetName as keyof typeof targetSets]);
   };
 
   const addNewTarget = (newTarget: FormData) => {
-
     setTargetSets((prevTargetSets) => ({
       ...prevTargetSets,
-      ...newTarget
+      ...newTarget,
     }));
   };
 
@@ -82,36 +119,31 @@ export default function Goddle() {
       <Navbar toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
       <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
       <div className={titleStyle}>
-        <div >
-          {Score()}
-
-        </div>
+        <div>{Score()}</div>
         <p className="text-2xl">Guess The {targetName}</p>
-        <div>
-          {Information(targets)}
-        </div>
+        <div>{Information(targets)}</div>
       </div>
       <div className={changeGameStyle}>
-        <div className="flex items-center justify-center self-center">
-          <select onChange={handleDropdownChange} value={targetName} className="bg-Yellow1">
-            {Object.keys(targetSets).map((target) => (
-              <option key={target} value={target}>{target}</option>
-            ))}
-          </select>
-        </div>
-        <div className="ml-auto">
-          <NewTargetForm onFormSubmit={addNewTarget} />
-        </div>
+        <select
+          onChange={handleDropdownChange}
+          value={targetName}
+          className="bg-Yellow1"
+        >
+          {Object.keys(targetSets).map((target) => (
+            <option key={target} value={target}>
+              {target}
+            </option>
+          ))}
+        </select>
+        <NewTargetForm onFormSubmit={addNewTarget} />
       </div>
 
       <h2>{Game(targets)}</h2>
-
     </div>
   );
 }
 
 function Game(targets: string[][]) {
-
   const number = getRandomNumber(0, targets.length);
   const [target, setTarget] = useState(targets[number]);
   const [value, setValue] = useState("");
@@ -124,7 +156,6 @@ function Game(targets: string[][]) {
   const [won, setWon] = useState<boolean>(false);
   const [numberOfAttempts, setnumberOfAttempts] = useState<number>(0);
   const [startingTime, setStartingTime] = useState<number>(0);
-
 
   useEffect(() => {
     const number = getRandomNumber(0, targets.length);
@@ -170,13 +201,13 @@ function Game(targets: string[][]) {
     }
     //Starting time of first guess
     if (numAttempts == 1) {
-      start = new Date().getTime()
+      start = new Date().getTime();
       setStartingTime(start);
     }
     if (answer[0] === target[0]) {
       setWon(true);
       alert("Congrats you found the answer!");
-      AddtoScore((new Date().getTime() - start), numAttempts);
+      AddtoScore(new Date().getTime() - start, numAttempts);
     }
 
     const submit: {
@@ -202,7 +233,6 @@ function Game(targets: string[][]) {
     setValue("");
     setnumberOfAttempts(numAttempts);
 
-
     event.preventDefault();
   };
 
@@ -223,21 +253,21 @@ function Game(targets: string[][]) {
             <button type="submit" style={arrowStyle} className="click"></button>
           ) : (
             //Using a submit button instead of reset button so User stays on the same goddle type (other types not implemented yet)
-            <button type="submit" className="hover:opacity-40 justify-center p-1">
+            <button
+              type="submit"
+              className="hover:opacity-40 justify-center p-1"
+            >
               Restart
             </button>
           )}
         </form>
       </div>
-      <div
-        className="justify-evenly ml-100 mr-100 mt-15"
-      >
+      <div className="justify-evenly ml-100 mr-100 mt-15">
         <table className="w-full gap-y-100 mt-10">
           <thead>
             <tr>
               {targets[0].map((name) => (
                 <th>{name}</th>
-
               ))}
             </tr>
           </thead>
@@ -297,31 +327,30 @@ function getRandomNumber(n: number, m: number) {
 }
 
 function Score() {
-  let topAttempt = "0"
-  let topTime = "0"
-  let gamesPlayed = "0"
+  let topAttempt = "0";
+  let topTime = "0";
+  let gamesPlayed = "0";
 
-  let topAttemptAdress = "topAttempt" + "=";
-  let topTimeAdress = "topTimeAdresst" + "=";
-  let gamesPlayedAdress = "gamesPlayed" + "=";
+  const topAttemptAdress = "topAttempt" + "=";
+  const topTimeAdress = "topTimeAdresst" + "=";
+  const gamesPlayedAdress = "gamesPlayed" + "=";
 
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(";");
   const [scoreVisible, setVisibility] = useState(false);
-
 
   //This does work but it slow Need to figure out why We could just delete all cookies which would be faster but if we expand for new games it could get messy
   const clearStats = () => {
     const d = new Date();
-    d.setTime(d.getTime() + (7 * 24 * 60 * 60 * 1000));
-    let expires = "expires=" + d.toUTCString();
+    d.setTime(d.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const expires = "expires=" + d.toUTCString();
     document.cookie = topAttemptAdress + 0 + ";" + expires + ";path=/";
     document.cookie = topTimeAdress + 0 + ";" + expires + ";path=/";
     document.cookie = gamesPlayedAdress + 0 + ";" + expires + ";path=/";
-  }
+  };
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i];
-    while (c.charAt(0) == ' ') {
+    while (c.charAt(0) == " ") {
       c = c.substring(1);
     }
     if (c.indexOf(topAttemptAdress) == 0) {
@@ -337,16 +366,14 @@ function Score() {
     }
   }
 
-  const toggleScore = (event: { preventDefault: () => void; }) => {
+  const toggleScore = (event: { preventDefault: () => void }) => {
     if (scoreVisible == false) {
       setVisibility(true);
     } else {
       setVisibility(false);
     }
     event.preventDefault(); // Prevent the default form submission behavior
-
-
-  }
+  };
 
   return (
     <>
@@ -357,45 +384,45 @@ function Score() {
           </svg>
 
 
-        </button>
-      </div>
+        </button >
+      </div >
       <div
         aria-expanded={scoreVisible}
-        className={` ${scoreVisible ? 'visible' : 'hidden'} ${overlayContainerStyle}`}
+        className={` ${scoreVisible ? "visible" : "hidden"
+          } ${overlayContainerStyle}`}
       >
-
         <div className={overlayStyle}>
           <div className="justify-between float-right">
-            <button onClick={toggleScore} className="hover:opacity-40 float-right mr-5">Close</button>
-            <button className="hover:opacity-40 float-left ml-5" onClick={clearStats}>Clear</button>
+            <button
+              onClick={toggleScore}
+              className="hover:opacity-40 float-right mr-5"
+            >
+              Close
+            </button>
+            <button
+              className="hover:opacity-40 float-left ml-5"
+              onClick={clearStats}
+            >
+              Clear
+            </button>
 
-            <h1 className="ml-10 mr-10 mb-10 text-4xl border-b-2 border-solid border-Blue2">Your Statistics</h1>
+            <h1 className="ml-10 mr-10 mb-10 text-4xl border-b-2 border-solid border-Blue2">
+              Your Statistics
+            </h1>
           </div>
 
           <div className="justify-around flex mt-15">
             <div className="justfiy-center">
-              <div>
-                Top Attempt
-              </div>
-              <div>
-                {topAttempt}
-              </div>
+              <div>Top Attempt</div>
+              <div>{topAttempt}</div>
             </div>
             <div className="justfiy-center">
-              <div>
-                Top Time
-              </div>
-              <div>
-                {topTime}
-              </div>
+              <div>Top Time</div>
+              <div>{topTime}</div>
             </div>
             <div className="justfiy-center">
-              <div>
-                Games Played
-              </div>
-              <div>
-                {gamesPlayed}
-              </div>
+              <div>Games Played</div>
+              <div>{gamesPlayed}</div>
             </div>
           </div>
         </div>
@@ -405,44 +432,55 @@ function Score() {
 }
 
 function AddtoScore(time: number, NumberOfAttempts: number) {
-
   const d = new Date();
-  d.setTime(d.getTime() + (7 * 24 * 60 * 60 * 1000));
-  let expires = "expires=" + d.toUTCString();
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(';');
-  let topAttemptAdress = "topAttempt" + "=";
-  let topTimeAdress = "topTimeAdresst" + "=";
-  let gamesPlayedAdress = "gamesPlayed" + "=";
+  d.setTime(d.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const expires = "expires=" + d.toUTCString();
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(";");
+  const topAttemptAdress = "topAttempt" + "=";
+  const topTimeAdress = "topTimeAdresst" + "=";
+  const gamesPlayedAdress = "gamesPlayed" + "=";
 
   let previousGameExist = false;
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i];
-    while (c.charAt(0) == ' ') {
+    while (c.charAt(0) == " ") {
       c = c.substring(1);
     }
     if (c.indexOf(topAttemptAdress) == 0) {
       previousGameExist = true;
-      if (Number(c.substring(topAttemptAdress.length, c.length)) > NumberOfAttempts || Number(c.substring(topAttemptAdress.length, c.length)) == 0) {
-        document.cookie = topAttemptAdress + NumberOfAttempts + ";" + expires + ";path=/";
+      if (
+        Number(c.substring(topAttemptAdress.length, c.length)) >
+        NumberOfAttempts ||
+        Number(c.substring(topAttemptAdress.length, c.length)) == 0
+      ) {
+        document.cookie =
+          topAttemptAdress + NumberOfAttempts + ";" + expires + ";path=/";
       }
     }
 
     if (c.indexOf(topTimeAdress) == 0) {
-      if (Number(c.substring(topTimeAdress.length, c.length)) > time || Number(c.substring(topTimeAdress.length, c.length)) == 0) {
+      if (
+        Number(c.substring(topTimeAdress.length, c.length)) > time ||
+        Number(c.substring(topTimeAdress.length, c.length)) == 0
+      ) {
         document.cookie = topTimeAdress + time + ";" + expires + ";path=/";
       }
     }
 
     if (c.indexOf(gamesPlayedAdress) == 0) {
       previousGameExist = true;
-      document.cookie = gamesPlayedAdress + (Number(c.substring(gamesPlayedAdress.length, c.length)) + 1) + ";" + expires + ";path=/";
+      document.cookie =
+        gamesPlayedAdress +
+        (Number(c.substring(gamesPlayedAdress.length, c.length)) + 1) +
+        ";" +
+        expires +
+        ";path=/";
     }
-
-
   }
   if (!previousGameExist) {
-    document.cookie = topAttemptAdress + NumberOfAttempts + ";" + expires + ";path=/";
+    document.cookie =
+      topAttemptAdress + NumberOfAttempts + ";" + expires + ";path=/";
     document.cookie = topTimeAdress + time + ";" + expires + ";path=/";
     document.cookie = gamesPlayedAdress + 1 + ";" + expires + ";path=/";
   }
@@ -472,23 +510,28 @@ function Information(targets: string[][]) {
       </div>
       <div
         aria-expanded={informationVisible}
-        className={` ${informationVisible ? 'visible' : 'hidden'} ${overlayContainerStyle}`}
-
+        className={` ${informationVisible ? "visible" : "hidden"
+          } ${overlayContainerStyle}`}
       >
         <div className={overlayStyle}>
           <div className="flex justify-end mr-2">
             <button onClick={toggleInformation} className="hover:opacity-40" >Close</button>
-          </div>
-          <h1 className="mb-2 text-4xl font-bold border-b-2 border-Blue2 pb-2">How to play:</h1>
-          <h2 className="mb-4">Take a guess from the following list, correct characteristics will show up green and incorrect ones red. Use your knowledge to find the right answer!</h2>
+          </div >
+          <h1 className="mb-2 text-4xl font-bold border-b-2 border-Blue2 pb-2">
+            How to play:
+          </h1>
+          <h2 className="mb-4">
+            Take a guess from the following list, correct characteristics will
+            show up green and incorrect ones red. Use your knowledge to find the
+            right answer!
+          </h2>
           <ul className="list-disc ml-8 text-start">
             {firstElements.map((element, index) => (
               <li key={index} className={index === 0 ? 'hidden' : ''}>{element}</li>
             ))}
           </ul>
-        </div>
-
-      </div>
+        </div >
+      </div >
     </>
   );
 }
@@ -501,33 +544,33 @@ interface NewTargetFormProps {
   onFormSubmit: OnFormSubmitType;
 }
 
-
-
 function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
   const [newTargetFormVisible, setVisibility] = useState(false);
 
-
-  const toggleNewTargetForm = (event: { preventDefault: () => void; }) => {
+  const toggleNewTargetForm = (event: { preventDefault: () => void }) => {
     if (newTargetFormVisible == false) {
       setVisibility(true);
     } else {
       setVisibility(false);
     }
     event.preventDefault(); // Prevent the default form submission behavior
-  }
+  };
 
   const [formTitle, setFormTitle] = useState("Your Title");
-  const [formRows, setFormRows] = useState<string[][]>([["Name", "Characteristic 1", "Characteristic 2", "Characteristic 3"],
-  ["", "", "", ""]]);
+  const [formRows, setFormRows] = useState<string[][]>([
+    ["Name", "Characteristic 1", "Characteristic 2", "Characteristic 3"],
+    ["", "", "", ""],
+  ]);
 
-  const handleTitleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+  const handleTitleChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setFormTitle(event.target.value);
   };
 
   const handleAddRow = () => {
     setFormRows([...formRows, Array(formRows[0].length).fill("")]);
   };
-
 
   const handleDeleteRow = (rowIndex: number) => {
     if (formRows.length > 1) {
@@ -537,42 +580,50 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
   };
 
   const handleAddColumn = () => {
-    setFormRows(formRows.map(row => [...row, ""]));
+    setFormRows(formRows.map((row) => [...row, ""]));
   };
 
   const handleDeleteColumn = (columnIndex: number) => {
     if (formRows[0].length > 1) {
-      const updatedRows = formRows.map(row => row.filter((_, index) => index !== columnIndex));
+      const updatedRows = formRows.map((row) =>
+        row.filter((_, index) => index !== columnIndex),
+      );
       setFormRows(updatedRows);
     } else {
-      const updatedRows = formRows.map(row => row.map((cell, index) => index === columnIndex ? "" : cell));
+      const updatedRows = formRows.map((row) =>
+        row.map((cell, index) => (index === columnIndex ? "" : cell)),
+      );
       setFormRows(updatedRows);
     }
-
   };
 
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, rowIndex: number, columnIndex: number) => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    rowIndex: number,
+    columnIndex: number,
+  ) => {
     const updatedRows = [...formRows];
     updatedRows[rowIndex][columnIndex] = event.target.value;
     setFormRows(updatedRows);
   };
   //@todo after we have managed to save them long term we need to look into avoiding reapating titles ?
-  const handleSubmit = (event: { preventDefault: () => void; }) => {
+  const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    if (formTitle === '') {
+    if (formTitle === "") {
       alert("Your set needs a title");
       return;
-    } else if (formRows.some(row => row.some(cell => cell.trim() === ''))) {
+    } else if (formRows.some((row) => row.some((cell) => cell.trim() === ""))) {
       alert("Please fill the whole set");
       return;
     }
     const formData = {
-      [formTitle]: formRows
+      [formTitle]: formRows,
     };
 
     setFormTitle("Your Title");
-    setFormRows([["Name", "Characteristic 1", "Characteristic 2", "Characteristic 3"]]);
+    setFormRows([
+      ["Name", "Characteristic 1", "Characteristic 2", "Characteristic 3"],
+    ]);
     setVisibility(false);
     onFormSubmit(formData);
   };
@@ -585,24 +636,32 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 float-right">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
-
         </button>
       </div>
       <div
         aria-expanded={newTargetFormVisible}
-        className={` ${newTargetFormVisible ? 'visible' : 'hidden'} ${overlayContainerStyle}`}
+        className={` ${newTargetFormVisible ? "visible" : "hidden"
+          } ${overlayContainerStyle}`}
       >
-
         <div className={overlayStyleForm}>
           <div className="justify-between float-right">
-            <button onClick={toggleNewTargetForm} className="hover:opacity-40 float-right mr-5">Close</button>
-
+            <input
+              type="text"
+              placeholder="Title"
+              value={formTitle}
+              onChange={handleTitleChange}
+              className="bg-Yellow1 border-rounded-lg text-center justify-center border-8 border-Purple1"
+            />
+            <button
+              onClick={toggleNewTargetForm}
+              className="hover:opacity-40 float-right mr-5"
+            >
+              Close
+            </button>
           </div>
-          <input type="text" placeholder="Title" value={formTitle} onChange={handleTitleChange} className="bg-Yellow1 border-rounded-lg text-center justify-center border-8 border-Purple1" />
-
-          <form onSubmit={handleSubmit} >
 
 
+          <form onSubmit={handleSubmit}>
             <table className="text-xs">
               <tbody>
                 {formRows.map((row, rowIndex) => (
@@ -613,39 +672,72 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
                           <input
                             type="text"
                             value={cell}
-                            onChange={(event) => handleInputChange(event, rowIndex, columnIndex)}
+                            onChange={(event) =>
+                              handleInputChange(event, rowIndex, columnIndex)
+                            }
                             className="bg-Yellow1 border-rounded-lg  border-4 border-Purple1"
                           />
                         </div>
 
-                        <button type="button" className={rowIndex !== formRows.length - 1 ? 'hidden' : ''} onClick={() => handleDeleteColumn(columnIndex)}>
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-3">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                          </svg>                        </button>
+                        <button
+                          type="button"
+                          className={
+                            rowIndex !== formRows.length - 1 ? "hidden" : ""
+                          }
+                          onClick={() => handleDeleteColumn(columnIndex)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            className="size-3"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M6 18 18 6M6 6l12 12"
+                            />
+                          </svg>{" "}
+                        </button>
                       </td>
                     ))}
-                    <button type="button" onClick={() => handleDeleteRow(rowIndex)}>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="size-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteRow(rowIndex)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="size-3"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M6 18 18 6M6 6l12 12"
+                        />
                       </svg>
                     </button>
-
                   </tr>
                 ))}
-              </tbody>
-            </table>
+              </tbody >
+            </table >
             <div className="justify-evenly flex">
-              <button type="button" onClick={handleAddRow}>Add Row</button>
-              <button type="button" onClick={handleAddColumn}>Add Column</button>
+              <button type="button" onClick={handleAddRow}>
+                Add Row
+              </button>
+              <button type="button" onClick={handleAddColumn}>
+                Add Column
+              </button>
               <button type="submit">Submit</button>
             </div>
-
-
-          </form>
-
-        </div>
-      </div>
+          </form >
+        </div >
+      </div >
     </>
   );
 }
-

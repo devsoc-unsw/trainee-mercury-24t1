@@ -13,15 +13,26 @@ export const register = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Password is empty" });
     }
 
-    await pool.query(
+    const userResults = await pool.query(
       `
-  INSERT INTO Users(email, password)
+  INSERT INTO users(email, password)
   VALUES ($1, $2)
+  RETURNING id
   `,
       [email, password],
     );
 
-    return res.json({ message: "Registration succesful" });
+    const userId = userResults.rows[0].id;
+
+    await pool.query(
+      `
+    INSERT INTO goddle_stats(user_id)
+    VALUES ($1)
+    `,
+      [userId],
+    );
+
+    return res.json({ message: "Registration succesful", userId });
   } catch (err) {
     if (err instanceof Error) {
       // PostgreSQL error code for unique violation
@@ -52,9 +63,8 @@ export const login = async (req: Request, res: Response) => {
 
     const result = await pool.query(
       `
-  SELECT email, password FROM Users
+  SELECT id, email, password FROM Users
   WHERE email = $1
-
   `,
       [email],
     );
@@ -62,13 +72,86 @@ export const login = async (req: Request, res: Response) => {
     if (result.rows.length > 0) {
       const user = result.rows[0];
       if (user.password === password) {
-        return res.json({ message: "Login succesful" });
+        return res.json({ message: "Login succesful", userId: user.id });
       } else {
         return res.status(401).json({ error: "Wrong password" });
       }
     } else {
       return res.status(404).json({ error: "User not found" });
     }
+  } catch (err) {
+    if (err instanceof Error) {
+      return res.status(500).json({ error: "Server error " + err.message });
+    }
+    return res.status(500).json({ error: "Server error" + err });
+  }
+};
+
+export const getGoddleStats = async (req: Request, res: Response) => {
+  try {
+    const userId = req.body.userId;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User id not provided" });
+    }
+
+    const stats = await pool.query(
+      `
+  SELECT top_attempt, top_time, games_played
+  FROM goddle_stats
+  WHERE user_id = $1
+  `,
+      [userId],
+    );
+
+    if (stats.rows.length <= 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const userStats = stats.rows[0];
+
+    return res.json({
+      topAttempt: userStats.top_attempt,
+      topTime: userStats.top_time,
+      gamesPlayed: userStats.games_played,
+    });
+  } catch (err) {
+    if (err instanceof Error) {
+      return res.status(500).json({ error: "Server error " + err.message });
+    }
+    return res.status(500).json({ error: "Server error" + err });
+  }
+};
+
+export const updateGoddleStats = async (req: Request, res: Response) => {
+  try {
+    const userId = req.body.userId;
+    const topAttempt = req.body.topAttempt;
+    const topTime = req.body.topTime;
+    const gamesPlayed = req.body.gamesPlayed;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User id not provided" });
+    }
+
+    if (!topAttempt || !topTime || !gamesPlayed) {
+      return res
+        .status(400)
+        .json({ error: "topAttempt, topTime, and gamesPlayed cant be empty" });
+    }
+
+    await pool.query(
+      `
+    UPDATE goddle_stats 
+    SET top_attempt = $1,
+        top_time = $2,
+        games_played = $3
+    WHERE user_id = $4
+    `,
+      [topAttempt, topTime, gamesPlayed, userId],
+    );
+
+    return res.json({ message: "Update successful" });
   } catch (err) {
     if (err instanceof Error) {
       return res.status(500).json({ error: "Server error " + err.message });

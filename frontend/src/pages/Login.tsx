@@ -43,6 +43,8 @@ export default function Login() {
           throw new Error(data.error);
         }
 
+        localStorage.setItem("userId", data.userId);
+
         alert("Login successful!");
         navigate("/home");
       } catch (err) {

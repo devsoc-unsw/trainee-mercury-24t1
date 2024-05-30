@@ -4,7 +4,7 @@ import AlgodleData from '../other/AlgodleData.json'
 import Heart from "../assets/Heart.png";
 
 export default function Algodle() {
-  document.body.style.overflow = 'hidden';
+  //document.body.style.overflow = 'hidden';
   const randomNumber = Math.floor(Math.random() * 5);
 
   const [algoIndex, setAlgoIndex] = useState(randomNumber);
@@ -17,17 +17,14 @@ export default function Algodle() {
 
   const changeC = () => {
     setDisplayAlgo(currentAlgo.CPlusPlus);
-    console.log(currentAlgo.Answer);
   }
 
   const changeJS = () => {
     setDisplayAlgo(currentAlgo.JavaScript);
-    console.log(currentAlgo.Answer);
   }
 
   const changePY = () => {
     setDisplayAlgo(currentAlgo.Python);
-    console.log(currentAlgo.Answer);
   }
 
   const returnToHome = () => {
@@ -61,11 +58,15 @@ export default function Algodle() {
     setUserAnswer('');
   }
 
-  return (
-    <div>
+/*
+  Back button:
       <div className='fixed top-5 left-5'>
         <button className='px-8 py-2 text-[20px] text-Blue2 font-bold font-Inter bg-Pink1 hover:bg-Pink2 transition duration-500 hover:scale-110' onClick={() => returnToHome()}>Back</button>
       </div>
+*/
+
+  return (
+    <div>
       <div className='flex flex-col justify-center items-center w-full h-screen bg-Blue1'>
         <div className='flex justify-center items-center text-[30px] text-Blue2 font-bold font-Inter bg-Yellow1 px-16 py-4 mb-10'>Algodle</div>
         <div className='flex'>

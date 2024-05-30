@@ -13,15 +13,24 @@ export const register = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Password is empty" });
     }
 
-    await pool.query(
+    const userId = await pool.query(
       `
-  INSERT INTO Users(email, password)
+  INSERT INTO users(email, password)
   VALUES ($1, $2)
+  RETURNING id
   `,
       [email, password],
     );
 
-    return res.json({ message: "Registration succesful" });
+    await pool.query(
+      `
+    INSERT INTO goddle_stats(user_id)
+    VALUES ($1)
+    `,
+      [userId],
+    );
+
+    return res.json({ message: "Registration succesful", userId });
   } catch (err) {
     if (err instanceof Error) {
       // PostgreSQL error code for unique violation

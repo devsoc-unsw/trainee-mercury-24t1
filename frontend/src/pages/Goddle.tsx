@@ -1,6 +1,9 @@
 import React, { CSSProperties, useState } from "react";
 import stats from "../assets/stats.png";
 import info from "../assets/info.png";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import { AnimatePresence } from "framer-motion";
 
 //To do:
 // Priority 1:Handle anser with extra white space (we don't have the lib config to use .replaceALl either add libes20221 or do it in another way),  Handle Answer Already submmited
@@ -35,30 +38,33 @@ const arrowStyle: CSSProperties = {
 
 
 export default function Goddle() {
-  
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   document.body.className = "bg-Blue1"
   return (
-    <div className="text-Blue2">
-      {/* <div style={{ padding: "10px 10px" }}>
-        <a href="/Home">Home </a>
-        <a style={{ color: "rgba(228, 193, 249, 1)" }} href="/Goddle">
-          Goddle{" "}
-        </a>
-        <a href="/Algodle">Algodle </a>
-        <a href="/broken-telephone">BrokenTelephone </a>
-      </div> */}
-      <div className={titleStyle}> 
-        <div >
-        {Score()} 
+    <div>
+        <Navbar toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
+        <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
+        <div className="text-Blue2">
+          {/* <div style={{ padding: "10px 10px" }}>
+            <a href="/Home">Home </a>
+            <a style={{ color: "rgba(228, 193, 249, 1)" }} href="/Goddle">
+              Goddle{" "}
+            </a>
+            <a href="/Algodle">Algodle </a>
+            <a href="/broken-telephone">BrokenTelephone </a>
+          </div> */}
+          <div className={titleStyle}> 
+            <div >
+            {Score()} 
 
+            </div>
+            <p className="text-2xl">Guess The Sorting Algorithm</p>
+            <div>
+            {Information()} 
+            </div>
+          </div>
+          <h2>{Game()}</h2>
         </div>
-        <p className="text-2xl">Guess The Sorting Algorithm</p>
-        <div>
-        {Information()} 
-        </div>
-      </div>
-      <h2>{Game()}</h2>
-
     </div>
   );
 }

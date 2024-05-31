@@ -1,6 +1,4 @@
 import React, { CSSProperties, useEffect, useState } from "react";
-import stats from "../assets/stats.png";
-import info from "../assets/info.png";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import { AnimatePresence } from "framer-motion";
@@ -41,7 +39,7 @@ const languageTarget = [
     "Stable",
     "Classification",
   ],
-  ["Selection", "n^2", "n^2", "n^2", "1", "No", "Selection"],
+  ["Java", "n^2", "n^2", "n^2", "1", "No", "Selection"],
   ["Bubble", "n", "n^2", "n^2", "1", "Yes", "Exchanging"],
   ["Insertion", "n", "n^2", "n^2", "1", "Yes", "Insertion"],
   ["Shell", "nlogn", "n^4/3", "n^3/2", "1", "No", "Insertion"],
@@ -120,17 +118,9 @@ export default function Goddle() {
     <div className="text-Blue2">
       <Navbar toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
       <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
-      {/* <div style={{ padding: "10px 10px" }}>
-        <a href="/Home">Home </a>
-        <a style={{ color: "rgba(228, 193, 249, 1)" }} href="/Goddle">
-          Goddle{" "}
-        </a>
-        <a href="/Algodle">Algodle </a>
-        <a href="/broken-telephone">BrokenTelephone </a>
-      </div> */}
       <div className={titleStyle}>
         <div className="mt-1">{Score()}</div>
-        <p className="text-2xl">Goddle ~ Guess The Sorting Algorithm</p>
+        <p className="text-2xl">Goddle ~ Guess The {targetName}</p>
         <div className="mt-2">{Information(targets)}</div>
       </div>
       <div className={changeGameStyle}>
@@ -147,6 +137,7 @@ export default function Goddle() {
         </select>
         <NewTargetForm onFormSubmit={addNewTarget} />
       </div>
+
       <h2>{Game(targets)}</h2>
     </div>
   );
@@ -388,25 +379,17 @@ function Score() {
     <>
       <div className="overflow-hidden">
         <button onClick={toggleScore} className="hover:opacity-40">
-          <img
-            style={{
-              background: "transparent",
-              width: "30px",
-              height: "30px",
-              filter: "drop-shadow(0px 100px 0 rgba(5, 74, 145, 1))",
-              transform: "translateY(-100px)",
-              marginLeft: "10px",
-            }}
-            src={stats}
-            alt="Statistics"
-          />
-        </button>
-      </div>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+          </svg>
+
+
+        </button >
+      </div >
       <div
         aria-expanded={scoreVisible}
-        className={` ${
-          scoreVisible ? "visible" : "hidden"
-        } ${overlayContainerStyle}`}
+        className={` ${scoreVisible ? "visible" : "hidden"
+          } ${overlayContainerStyle}`}
       >
         <div className={overlayStyle}>
           <div className="justify-between float-right">
@@ -468,7 +451,7 @@ function AddtoScore(time: number, NumberOfAttempts: number) {
       previousGameExist = true;
       if (
         Number(c.substring(topAttemptAdress.length, c.length)) >
-          NumberOfAttempts ||
+        NumberOfAttempts ||
         Number(c.substring(topAttemptAdress.length, c.length)) == 0
       ) {
         document.cookie =
@@ -505,46 +488,35 @@ function AddtoScore(time: number, NumberOfAttempts: number) {
 
 function Information(targets: string[][]) {
   const [informationVisible, setVisibility] = useState(false);
-  const firstElements = targets.map((subArray) => subArray[0]);
-  const toggleScore = (event: { preventDefault: () => void }) => {
+  const firstElements = targets.map(subArray => subArray[0]);
+  const toggleInformation = (event: { preventDefault: () => void; }) => {
     if (informationVisible == false) {
       setVisibility(true);
     } else {
       setVisibility(false);
     }
-    event.preventDefault(); // Prevent the default form submission behavior
-  };
+    event.preventDefault();
+  }
 
   return (
     <>
       <div className="overflow-hidden">
-        <button onClick={toggleScore} className="hover:opacity-40">
-          <img
-            style={{
-              background: "transparent",
-              width: "30px",
-              height: "30px",
-              filter: "drop-shadow(0px 100px 0 rgba(5, 74, 145, 1))",
-              transform: "translateY(-100px)",
-              marginRight: "5px",
-            }}
-            src={info}
-            alt="Info"
-          />
+        <button onClick={toggleInformation} className="hover:opacity-40">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+          </svg>
+
         </button>
       </div>
       <div
         aria-expanded={informationVisible}
-        className={` ${
-          informationVisible ? "visible" : "hidden"
-        } ${overlayContainerStyle}`}
+        className={` ${informationVisible ? "visible" : "hidden"
+          } ${overlayContainerStyle}`}
       >
         <div className={overlayStyle}>
           <div className="flex justify-end mr-2">
-            <button onClick={toggleScore} className="hover:opacity-40">
-              Close
-            </button>
-          </div>
+            <button onClick={toggleInformation} className="hover:opacity-40" >Close</button>
+          </div >
           <h1 className="mb-2 text-4xl font-bold border-b-2 border-Blue2 pb-2">
             How to play:
           </h1>
@@ -555,11 +527,11 @@ function Information(targets: string[][]) {
           </h2>
           <ul className="list-disc ml-8 text-start">
             {firstElements.map((element, index) => (
-              <li key={index}>{element}</li>
+              <li key={index} className={index === 0 ? 'hidden' : ''}>{element}</li>
             ))}
           </ul>
-        </div>
-      </div>
+        </div >
+      </div >
     </>
   );
 }
@@ -658,32 +630,28 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
 
   return (
     <>
-      <div className="overflow-hidden">
-        <button onClick={toggleNewTargetForm} className="hover:opacity-40">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
+      <div className="overflow-hidden ">
+        <button onClick={toggleNewTargetForm} className="hover:opacity-40 float-right">
+
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 float-right">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
         </button>
       </div>
       <div
         aria-expanded={newTargetFormVisible}
-        className={` ${
-          newTargetFormVisible ? "visible" : "hidden"
-        } ${overlayContainerStyle}`}
+        className={` ${newTargetFormVisible ? "visible" : "hidden"
+          } ${overlayContainerStyle}`}
       >
         <div className={overlayStyleForm}>
-          <div className="justify-between float-right">
+          <div className="">
+            <input
+              type="text"
+              placeholder="Title"
+              value={formTitle}
+              onChange={handleTitleChange}
+              className="bg-Yellow1 border-rounded-lg text-center justify-center "
+            />
             <button
               onClick={toggleNewTargetForm}
               className="hover:opacity-40 float-right mr-5"
@@ -691,13 +659,6 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
               Close
             </button>
           </div>
-          <input
-            type="text"
-            placeholder="Title"
-            value={formTitle}
-            onChange={handleTitleChange}
-            className="bg-Yellow1 border-rounded-lg text-center justify-center border-2 mx-2 my-2 border-Purple1 rounded-md"
-          />
 
           <form onSubmit={handleSubmit}>
             <table className="text-xs">
@@ -713,7 +674,7 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
                             onChange={(event) =>
                               handleInputChange(event, rowIndex, columnIndex)
                             }
-                            className="bg-Yellow1 border-rounded-lg  mx-2 border-2 border-Purple1 rounded-sm mt-2 justify-center"
+                            className="bg-Yellow1 border-rounded-full  mx-2 rounded-sm mt-2 justify-center"
                           />
                         </div>
 
@@ -730,7 +691,7 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
                             viewBox="0 0 24 24"
                             stroke-width="1.5"
                             stroke="currentColor"
-                            className="size-6"
+                            className="size-3"
                           >
                             <path
                               stroke-linecap="round"
@@ -751,7 +712,7 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
                         viewBox="0 0 24 24"
                         stroke-width="1.5"
                         stroke="currentColor"
-                        className="size-6"
+                        className="size-3"
                       >
                         <path
                           stroke-linecap="round"
@@ -762,8 +723,8 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
                     </button>
                   </tr>
                 ))}
-              </tbody>
-            </table>
+              </tbody >
+            </table >
             <div className="justify-evenly flex">
               <button type="button" onClick={handleAddRow}>
                 Add Row
@@ -773,9 +734,9 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
               </button>
               <button type="submit">Submit</button>
             </div>
-          </form>
-        </div>
-      </div>
+          </form >
+        </div >
+      </div >
     </>
   );
 }

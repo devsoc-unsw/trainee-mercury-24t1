@@ -70,11 +70,11 @@ export default function Algodle() {
 */
 
   return (
-    <div>
+    <div className='bg-Blue1 h-screen'>
       <Navbar toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
       <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
       <div className='flex flex-col justify-center items-center w-full h-screen bg-Blue1'>
-        <div className='flex justify-center items-center text-[30px] text-Blue2 font-bold font-Inter bg-Yellow1 px-16 py-4 mb-10'>Algodle</div>
+        <div className='flex justify-center items-center text-[30px] text-Blue2 font-bold font-Inter rounded-md bg-Yellow1 px-16 py-4 mb-10'>Algodle</div>
         <div className='flex'>
           {hearts.map((heart, index) => {
             return (
@@ -85,27 +85,27 @@ export default function Algodle() {
             )
           })}
         </div>
-        <div className='flex w-4/5 h-3/6 bg-Green2 p-6'>
-          <div className='flex w-full bg-Green1'>
+        <div className='flex w-4/5 h-3/6 bg-Green2 p-6 mt-8 rounded-md shadow-md'>
+          <div className='flex w-full bg-Green1 rounded-md shadow-lg'>
             <div className='flex flex-1 p-2 text-[16px] text-Blue2 font-bold font-Inter whitespace-pre-wrap overflow-auto'>
               {displayAlgo}
             </div>
             <div className='flex flex-col flex-[0.5] justify-center items-center'>
-              <div className='bg-Orange2 p-1 mb-6'>
-                <button className='w-64 py-2 text-[24px] text-Blue2 font-bold font-Inter bg-Yellow1 transition duration-500 hover:bg-Orange2' onClick={() => changeC()}>C++</button>
+              <div className='bg-Orange2 p-1 mb-6 rounded-md'>
+                <button className='w-64 py-2 text-[24px] rounded-md text-Blue2 font-bold font-Inter bg-Yellow1 transition duration-500 hover:bg-Orange2' onClick={() => changeC()}>C++</button>
               </div>
-              <div className='bg-Orange2 p-1 mb-6'>
-                <button className='w-64 py-2 text-[24px] text-Blue2 font-bold font-Inter bg-Yellow1 transition duration-500 hover:bg-Orange2' onClick={() => changeJS()}>JavaScript</button>
+              <div className='bg-Orange2 p-1 mb-6 rounded-md'>
+                <button className='w-64 py-2 text-[24px] rounded-md text-Blue2 font-bold font-Inter bg-Yellow1 transition duration-500 hover:bg-Orange2' onClick={() => changeJS()}>JavaScript</button>
               </div>
-              <div className='bg-Orange2 p-1'>
-                <button className='w-64 py-2 text-[24px] text-Blue2 font-bold font-Inter bg-Yellow1 transition duration-500 hover:bg-Orange2' onClick={() => changePY()}>Python</button>
+              <div className='bg-Orange2 p-1 rounded-md'>
+                <button className='w-64 py-2 text-[24px] rounded-md text-Blue2 font-bold font-Inter bg-Yellow1 transition duration-500 hover:bg-Orange2' onClick={() => changePY()}>Python</button>
               </div>
             </div>
           </div>
         </div>
         <div className='mt-12'>
           <input className='w-64 h-16 p-2 rounded text-lg border-black border-b-2 mb-4' type='text' placeholder='Algorithm Guess' onChange={e => setUserAnswer(e.target.value)} value={userAnswer}></input>
-          <button className='w-32 py-2 text-[24px] text-Blue2 font-bold font-Inter bg-Purple1 transition duration-500 hover:bg-Pink2 ml-6' onClick={() => checkAnswer()}>Submit</button>
+          <button className='w-32 py-2 text-[24px] text-Blue2 font-bold font-Inter rounded-md bg-Purple1 transition duration-500 hover:bg-Pink2 ml-6' onClick={() => checkAnswer()}>Submit</button>
         </div>
       </div>
     </div>

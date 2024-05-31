@@ -2,7 +2,12 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { Pool } from "pg";
-import { getGoddleStats, login, register, updateGoddleStats } from "./controller";
+import {
+  getGoddleStats,
+  login,
+  register,
+  updateGoddleStats,
+} from "./controller";
 import { Request, Response } from "express";
 
 dotenv.config();
@@ -15,6 +20,10 @@ const config = {
   port: parseInt(process.env.DB_PORT as string),
 };
 
+const corsOptions = {
+  origin: "http://170.64.174.149",
+};
+
 console.log(config);
 
 export const pool = new Pool(config);
@@ -22,7 +31,7 @@ export const pool = new Pool(config);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Testing connection
@@ -40,7 +49,6 @@ app.post("/register", register);
 app.post("/login", login);
 app.post("/get-goddle-stats", getGoddleStats);
 app.post("/update-goddle-stats", updateGoddleStats);
-
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

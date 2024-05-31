@@ -564,7 +564,7 @@ function Information(targets: string[][]) {
   );
 }
 type FormData = {
-  [category: string]: any; // Change `any` to the type of your targets if possible
+  [category: string]: string[][]; // Change `any` to the type of your targets if possible
 };
 
 type OnFormSubmitType = (formData: FormData) => void;

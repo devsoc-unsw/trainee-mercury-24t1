@@ -67,7 +67,7 @@ export default function Login() {
           <div className="flex justify-center items-center mb-5">
             {/* <img className="w-14 h-14 mr-4" src={logo}></img> */}
             <span className="text-[64px] text-black text-opacity-75 font-bold font-Inter">
-            🤓Algomes
+              🤓Algomes
             </span>
           </div>
           <span className="text-[36px] text-black text-opacity-75 font-bold font-Inter mb-1.5">

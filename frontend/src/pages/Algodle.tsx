@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import AlgodleData from '../other/AlgodleData.json'
 import Heart from "../assets/Heart.png";
 import Navbar from "../components/Navbar";
@@ -16,7 +16,7 @@ export default function Algodle() {
   let currentAlgo = AlgodleData[algoIndex];
 
   const [userAnswer, setUserAnswer] = useState('');
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [displayAlgo, setDisplayAlgo] = useState(currentAlgo.CPlusPlus);
 
   const changeC = () => {
@@ -31,9 +31,9 @@ export default function Algodle() {
     setDisplayAlgo(currentAlgo.Python);
   }
 
-  const returnToHome = () => {
-    navigate('/home');
-  }
+  // const returnToHome = () => {
+  //   navigate('/home');
+  // }
 
   const checkAnswer = () => {
     const temp = userAnswer.toLowerCase();

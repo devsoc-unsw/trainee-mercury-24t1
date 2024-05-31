@@ -8,7 +8,7 @@ export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className='bg-Blue1 h-screen'>
+    <div className='bg-Blue1 min-h-screen'>
       <Navbar toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
       <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
       <div className="grid grid-cols-1 justify-items-center">

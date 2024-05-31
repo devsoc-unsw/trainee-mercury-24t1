@@ -76,7 +76,7 @@ const Connections: React.FC = () => {
     const allGreen = Object.values(colors).every(color => color === 'bg-green-500');
 
     return (
-        <div className='bg-Blue1 h-screen'>
+        <div className='bg-Blue1 min-h-screen pb-14'>
             <Navbar toggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
             <AnimatePresence>{isSidebarOpen && <Sidebar />}</AnimatePresence>
             <div className="grid grid-cols-1 justify-items-center">

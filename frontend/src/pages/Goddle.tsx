@@ -32,20 +32,14 @@ const algorithmTarget = [
 const languageTarget = [
   [
     "Name",
-    "Best Case",
-    "Worst Case",
-    "Average Case",
-    "Space Complexity",
-    "Stable",
-    "Classification",
+    "Platform",
+    "Best for",
+    "Advantages",
+    "Disadvantages",
   ],
-  ["Java", "n^2", "n^2", "n^2", "1", "No", "Selection"],
-  ["Bubble", "n", "n^2", "n^2", "1", "Yes", "Exchanging"],
-  ["Insertion", "n", "n^2", "n^2", "1", "Yes", "Insertion"],
-  ["Shell", "nlogn", "n^4/3", "n^3/2", "1", "No", "Insertion"],
-  ["Merge", "nlogn", "nlogn", "nlogn", "n", "Yes", "Merging"],
-  ["Quick", "nlogn", "nlogn", "n^2", "logn", "No", "Partitioning"],
-  ["Radix", "n", "n* k/d", "n* k/d", "n + 2^d", "Yes", "Non-comparison"],
+  ["Java", "Java SE, Java EE, Java, ME, Java FX", "Creation of complete dynamic applications", "Object-oreinted, easi programming language, platform independent", "Slow and poor performance, no backup facility"],
+  ["PYTHON", "Linux, graphical user interface, mac OS", "Data analytics, machine learning, even design", "Enhanced productivity, easy to learn and write dynamically typed, vast library suppot, hassle-free", "Limitations of database, Slower runtime speed, high memory consumption, runtime errors"],
+  ["C", "WPrel, Cygwin, Linuxeakly typed", "Scripting of system application and coding embeded systems", "Funda mental block for many other programming languages, middle-level and structural language, built-functions", "Inneficient memory management, absence of expetion handling, Run-time checking, lack of constructor and destructor"],
 ];
 
 const titleStyle =
@@ -674,7 +668,7 @@ function NewTargetForm({ onFormSubmit }: NewTargetFormProps) {
                             onChange={(event) =>
                               handleInputChange(event, rowIndex, columnIndex)
                             }
-                            className="bg-Yellow1 border-rounded-full  mx-2 rounded-sm mt-2 justify-center"
+                            className="bg-Yellow1 border-rounded-lg  mx-2 rounded-sm mt-2 justify-center"
                           />
                         </div>
 
